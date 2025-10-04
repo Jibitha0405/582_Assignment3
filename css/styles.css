@@ -1,0 +1,70 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #ebeae8;
+  ;
+}
+
+.navbar {
+  border-bottom: 2px solid #ccc;
+  min-height: 80px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.vendor-gallery-main img {
+  width: 100vw;
+  height: 50vh;
+}
+
+.btn {
+  width: 150px;
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 200px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.3em 0.6em;
+}
+
+.cart-badge {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  font-size: 0.75rem;
+  padding: 0.35em 0.6em;
+  box-shadow: 0 0 0 2px #212529;
+}
+
+.event-card,
+.booking-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.edit-icon {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.edit-icon:hover {
+  opacity: 1;
+}
