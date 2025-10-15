@@ -68,3 +68,19 @@ body {
 .edit-icon:hover {
   opacity: 1;
 }
+
+.view-detail {
+   background-color: #C0C0C0;
+   border: none;
+   color: white;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+}
+
+.view-detail:hover {
+   background-color: #A9A9A9;
+   color: white;
+   text-decoration: none;
+}
