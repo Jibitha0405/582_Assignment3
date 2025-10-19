@@ -1,10 +1,15 @@
+:root {
+  --background-color: #edf2f4;
+  --font: 'Poppins', sans-serif;
+}
+
 body {
   /* font-family: 'Segoe UI', sans-serif;
   background-color: #ebeae8;
   ; */
 
-  font-family: 'Poppins', sans-serif;
-  background-color: #f4f6f8;
+  font-family: var(--font);
+  background-color: var(--background-color);
   margin: 0;
   padding: 0;
 }

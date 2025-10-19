@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Client Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .profile-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic-container img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #dee2e6;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-text {
+            color: #0d6efd;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        .edit-text:hover {
+            color: #0b5ed7;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            height: 42px;
+        }
+
+        .btn-primary {
+            border-radius: 50px;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+        }
+
+        .stats-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 150px;
+            /* ensures equal height */
+            overflow: hidden;
+            /* keeps content inside */
+        }
+
+        .stats-card h1 {
+            font-size: 2.5rem;
+            /* scales nicely */
+            margin: 0;
+            word-break: break-word;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+        }
+
+
+        .data-section {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .container-fluid.full-width {
+            max-width: 100%;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        .profile-section {
+            flex: 0 0 40%;
+            max-width: 40%;
+        }
+
+        .stats-section {
+            flex: 0 0 60%;
+            max-width: 60%;
+        }
+
+        @media (max-width: 991px) {
+
+            .profile-section,
+            .stats-section {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm bg-white">
+        <div class="container-fluid d-flex flex-column flex-lg-row justify-content-lg-between align-items-center gap-3">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/icon.png" width="50" height="50" alt="">
+            </a>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end gap-3 w-100">
+                <form class="d-flex position-relative flex-grow-1 min-w-200">
+                    <input class="form-control rounded-pill ps-5" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </form>
+
+                <div class="position-relative min-w-120">
+                    <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-4"
+                        href="checkout.html">
+                        <i class="bi bi-cart-fill"></i>
+                        <span>Cart</span>
+                    </a>
+                    <span
+                        class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">2</span>
+                </div>
+
+                <div class="nav-item dropdown position-relative min-w-60">
+                    <button
+                        class="btn btn-light rounded-circle position-relative d-flex align-items-center justify-content-center w-45 h-45"
+                        id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2"
+                        aria-labelledby="notificationDropdown" style="width: 320px;">
+                        <li class="p-2 rounded bg-light mb-2">
+                            <div class="fw-bold text-success">Booking Accepted ✅</div>
+                            <div>Your Wedding Shoot booking for 4 May 2025 has been accepted.</div>
+                            <div class="small text-muted mt-1">2 hrs ago</div>
+                            <div class="text-end mt-2">
+                                <button class="btn btn-sm btn-outline-secondary">OK</button>
+                            </div>
+                        </li>
+                        <li class="p-2 rounded bg-light">
+                            <div class="fw-bold text-danger">Booking Declined ❌</div>
+                            <div>Your Save The Date booking for 17 April 2025 has been Rejected.</div>
+                            <div class="small text-muted mt-1">1 day ago</div>
+                            <div class="text-end mt-2">
+                                <button class="btn btn-sm btn-outline-secondary">OK</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown position-relative min-w-60">
+                    <button
+                        class="btn btn-light rounded-circle d-flex align-items-center justify-content-center w-45 h-45"
+                        id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle text-secondary fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2" aria-labelledby="profileDropdown"
+                        style="min-width: 160px;">
+                        <li>
+                            <a class="dropdown-item" href="customer_profile.html">
+                                <i class="bi bi-person-circle me-2"></i>View Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="logout.html">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid full-width py-5">
+        <div class="row g-4 d-flex justify-content-between">
+            <!-- Profile Section -->
+            <div class="col-lg-5 profile-section">
+                <div class="profile-card text-start">
+                    <div class="profile-pic-container">
+                        <img src="img/profile.jpg" alt="Profile"
+                            onerror="this.onerror=null; this.src='img/default-avatar.png';">
+                        <div>
+                            <label for="profileUpload" class="edit-text">Edit</label>
+                            <input type="file" id="profileUpload" accept="image/*" hidden>
+                        </div>
+                        <h5 class="fw-bold mt-2">Jibitha Rose Baburaj</h5>
+                    </div>
+
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" class="form-control" placeholder="Jibitha Rose Baburaj" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Address</label>
+                            <input type="text" class="form-control" placeholder="Street address or PO Box" />
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6 d-flex flex-column">
+                                <label class="form-label fw-semibold text-truncate" title="Suburb">Suburb</label>
+                                <input type="text" class="form-control" placeholder="Suburb" />
+                            </div>
+                            <div class="col-12 col-md-6 d-flex flex-column">
+                                <label class="form-label fw-semibold text-truncate"
+                                    title="State / Province / Region">State / Province / Region</label>
+                                <input type="text" class="form-control" placeholder="State" />
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-12 col-md-4 d-flex flex-column">
+                                <label class="form-label fw-semibold text-truncate" title="Postcode">Postcode</label>
+                                <input type="text" class="form-control" placeholder="Postcode" />
+                            </div>
+                            <div class="col-12 col-md-4 d-flex flex-column">
+                                <label class="form-label fw-semibold text-truncate" title="Country Code">Country
+                                    Code</label>
+                                <input type="text" class="form-control" placeholder="+61" />
+                            </div>
+                            <div class="col-12 col-md-4 d-flex flex-column">
+                                <label class="form-label fw-semibold text-truncate" title="Phone Number">Phone
+                                    Number</label>
+                                <input type="text" class="form-control" placeholder="Phone number" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold">Save</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Stats & Appointments -->
+            <div class="col-lg-7 stats-section">
+                <div class="row g-3">
+                    <div class="col-6 col-md-3 d-flex">
+                        <div class="stats-card flex-fill text-center">
+                            <h1 class="fw-bold">5</h1>
+                            <p class="text-muted mb-0">All Bookings</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 d-flex">
+                        <div class="stats-card flex-fill text-center">
+                            <h1 class="text-primary fw-bold">2</h1>
+                            <p class="text-muted mb-0">Accepted</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 d-flex">
+                        <div class="stats-card flex-fill text-center">
+                            <h1 class="text-danger fw-bold">5</h1>
+                            <p class="text-muted mb-0">Cancelled</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 d-flex">
+                        <div class="stats-card flex-fill text-center">
+                            <h1 class="text-success fw-bold">2</h1>
+                            <p class="text-muted mb-0">Completed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Section -->
+                <div class="data-section mt-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">Booking Details</h6>
+                        <i class="bi bi-trash3" style="font-size: 1.2rem; cursor: pointer;"></i>
+                    </div>
+
+                    <!-- Responsive table wrapper -->
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><input type="checkbox"></th>
+                                    <th>Date</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>29/10/2025</td>
+                                    <td>Save the Date</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Cancelled</span></td>
+                                    <td>$50</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>15/11/2025</td>
+                                    <td>Wedding</td>
+                                    <td><span class="badge bg-info-subtle text-info">Booked</span></td>
+                                    <td>$345</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>11/11/2025</td>
+                                    <td>Engagement</td>
+                                    <td><span class="badge bg-success-subtle text-success">Done</span></td>
+                                    <td>$130</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
