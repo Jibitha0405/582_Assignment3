@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Photographer Dashboard | Visual Alchemy{% endblock %}
+
+{% block content %}
+<div class="vendor-gallery-main position-relative d-inline-block">
+    <img src="{{ url_for('static', filename='img/portfolio3.jpg') }}" class="img-fluid object-fit-cover"
+        alt="Top Image">
+    <a href="#edit" class="position-absolute top-0 end-0 m-2 bg-transparent p-2" title="Edit">
+        <i class="fas fa-pencil-alt text-white"></i>
+    </a>
+</div>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        <button class="btn btn-primary w-auto" data-bs-toggle="collapse" data-bs-target="#createEventForm">
+            + Create New Event
+        </button>
+    </div>
+
+    <div class="collapse mb-4" id="createEventForm">
+        <div class="bg-white p-3 border rounded">
+            <h5 class="mb-3">Add New Event</h5>
+            <form>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Event Name</label>
+                        <input type="text" class="form-control" placeholder="Enter event name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Number of Hours</label>
+                        <input type="number" class="form-control" placeholder="e.g. 3">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Price</label>
+                        <input type="text" class="form-control" placeholder="$100">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Event Photo</label>
+                        <input type="file" class="form-control" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">Save Event</button>
+            </form>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Your Events</h4>
+    <div class="row">
+        {% set events = [
+        {'img': 'wedding.jpg', 'title': 'Wedding Shoot', 'info': '10 hours - $1400'},
+        {'img': 'engagement.jpg', 'title': 'Engagement', 'info': '6 hours - $1000'},
+        {'img': 'weddingreception.jpg', 'title': 'Wedding Reception', 'info': '8 hours - $1400'},
+        {'img': 'savethedate.jpg', 'title': 'Save the Date Shoot', 'info': '4 hours - $600'},
+        {'img': 'birthdaycelebration.jpg', 'title': 'Birthday Celebration', 'info': '3 hours - $600'},
+        {'img': 'maternityshoot.jpg', 'title': 'Maternity Shoot', 'info': '4 hours - $600'},
+        {'img': 'baptism.jpg', 'title': 'Baptism', 'info': '5 hours - $1000'}
+        ] %}
+
+        {% for e in events %}
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/' ~ e.img) }}" class="card-img-top" alt="{{ e.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ e.title }}</h5>
+                    <p class="card-text">{{ e.info }}</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-primary">Edit</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="booking-container">
+        <h4 class="mt-5 mb-3">Booking Requests</h4>
+
+        <div class="booking-card p-3 border rounded mb-3">
+            <h6 class="mb-3">Booking #101</h6>
+            <p class="mb-2"><strong>Customer:</strong> John Doe</p>
+            <p class="mb-2"><strong>Event:</strong> Sample Event 1</p>
+            <p class="mb-2"><strong>Date:</strong> 20 Aug 2025</p>
+
+            <div class="mb-2">
+                <button class="btn btn-sm btn-success me-2">Accept</button>
+                <button class="btn btn-sm btn-danger" data-bs-toggle="collapse"
+                    data-bs-target="#declineReason1">Decline</button>
+            </div>
+
+            <div class="collapse mb-2" id="declineReason1">
+                <textarea class="form-control mb-2" rows="2" placeholder="Reason for decline"></textarea>
+                <button class="btn btn-sm btn-danger">Submit Decline</button>
+            </div>
+        </div>
+
+        <div class="booking-card p-3 border rounded mb-3">
+            <h6 class="mb-3">Booking #102</h6>
+            <p class="mb-2"><strong>Customer:</strong> Jane Smith</p>
+            <p class="mb-2"><strong>Event:</strong> Sample Event 2</p>
+            <p class="mb-2"><strong>Date:</strong> 22 Aug 2025</p>
+
+            <div class="mb-2">
+                <button class="btn btn-sm btn-success me-2">Accept</button>
+                <button class="btn btn-sm btn-danger" data-bs-toggle="collapse"
+                    data-bs-target="#declineReason2">Decline</button>
+            </div>
+
+            <div class="collapse mb-2" id="declineReason2">
+                <textarea class="form-control mb-2" rows="2" placeholder="Reason for decline"></textarea>
+                <button class="btn btn-sm btn-danger">Submit Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="accepted-bookings-container">
+        <h4 class="mt-5 mb-3">Accepted Bookings</h4>
+
+        <div class="booking-card p-3 border rounded mb-3">
+            <h6 class="mb-3">Booking #99</h6>
+            <p class="mb-2"><strong>Customer:</strong> Johan</p>
+            <p class="mb-2"><strong>Event:</strong> Sample Event 1</p>
+            <p class="mb-2"><strong>Date:</strong> 20 Aug 2025</p>
+        </div>
+
+        <div class="booking-card p-3 border rounded mb-3">
+            <h6 class="mb-3">Booking #100</h6>
+            <p class="mb-2"><strong>Customer:</strong> Jasmine</p>
+            <p class="mb-2"><strong>Event:</strong> Sample Event 2</p>
+            <p class="mb-2"><strong>Date:</strong> 22 Aug 2025</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

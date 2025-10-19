@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Vendor Gallery | Visual Alchemy{% endblock %}
+
+{% block content %}
+<div class="vendor-gallery-main">
+    <img src="{{ url_for('static', filename='img/portfolio3.jpg') }}" class="img-fluid object-fit-cover"
+        alt="Top Image">
+</div>
+
+<div class="container py-4">
+    <div class="row">
+        {% set items = [
+        {'img': 'wedding.jpg', 'title': 'Wedding Shoot', 'price': '10 hours - $1400'},
+        {'img': 'engagement.jpg', 'title': 'Engagement', 'price': '6 hours - $1000'},
+        {'img': 'weddingreception.jpg', 'title': 'Wedding Reception', 'price': '8 hours - $1400'},
+        {'img': 'savethedate.jpg', 'title': 'Save the Date Shoot', 'price': '4 hours - $600'},
+        {'img': 'birthdaycelebration.jpg', 'title': 'Birthday Celebration', 'price': '3 hours - $600'},
+        {'img': 'maternityshoot.jpg', 'title': 'Maternity Shoot', 'price': '4 hours - $600'},
+        {'img': 'baptism.jpg', 'title': 'Baptism', 'price': '5 hours - $1000'}
+        ] %}
+
+        {% for item in items %}
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/' ~ item.img) }}" class="card-img-top"
+                    alt="{{ item.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.price }}</p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center"
+                            href="{{ url_for('item_details') }}">
+                            <span>View Details</span>
+                        </a>
+                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

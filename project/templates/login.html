@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Photography Auth{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-xl-row min-vh-100">
+
+  <!-- Image Section -->
+  <div class="w-100 w-xl-60">
+    <img src="{{ url_for('static', filename='img/loginCamera.jpg') }}" class="img-fluid left-img" alt="Camera image">
+  </div>
+
+  <div class="top-right-tabs">
+    <ul class="nav nav-tabs" id="authTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button"
+          role="tab">Sign Up</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
+          role="tab">Log In</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Form Section -->
+  <div class="w-100 w-md-40 d-flex justify-content-center align-items-center px-4 py-5">
+    <div class="w-100" style="max-width: 450px;">
+      <img src="{{ url_for('static', filename='img/icon.png') }}" class="form-logo d-block mx-auto mb-3"
+        alt="Camera icon">
+
+      <!-- Tab Content -->
+      <div class="tab-content" id="authTabsContent">
+        <!-- Sign Up Form -->
+        <div class="tab-pane fade show active" id="signup" role="tabpanel">
+          <form>
+            <!-- Role Toggle -->
+            <div class="toggle-buttons d-flex justify-content-center gap-2 mb-4">
+              <input type="radio" name="role_signup" id="signup_customer" value="customer" checked>
+              <label for="signup_customer">I am a Customer</label>
+
+              <input type="radio" name="role_signup" id="signup_photographer" value="photographer">
+              <label for="signup_photographer">I am a Photographer</label>
+            </div>
+
+            <div class="mb-3">
+              <input type="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" placeholder="Confirm Password" required>
+            </div>
+            <button type="submit" class="btn btn-auth w-100 mt-2">Sign Up</button>
+          </form>
+        </div>
+
+        <!-- Login Form -->
+        <div class="tab-pane fade" id="login" role="tabpanel">
+          <form>
+            <!-- Role Toggle -->
+            <div class="toggle-buttons d-flex justify-content-center gap-2 mb-4">
+              <input type="radio" name="role_login" id="login_customer" value="customer" checked>
+              <label for="login_customer">I am a Customer</label>
+
+              <input type="radio" name="role_login" id="login_photographer" value="photographer">
+              <label for="login_photographer">I am a Photographer</label>
+            </div>
+
+            <div class="mb-3">
+              <input type="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-auth w-100 mt-2">Log In</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center mt-4 footer-links">
+        <a href="#">Terms of Service</a> |
+        <a href="#">Privacy</a> |
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
