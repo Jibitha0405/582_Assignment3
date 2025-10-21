@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Checkout | Visual Alchemy{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Left: Order Summary -->
+        <div class="col-lg-6 mb-4">
+            <div class="bg-light p-4 mt-3 shadow-sm rounded">
+                <h4 class="mb-3">Order Summary</h4>
+
+                <div class="d-flex justify-content-between border-bottom pb-3 mb-3 flex-wrap">
+                    <div>
+                        <p class="mb-1"><strong>Event:</strong> Wedding</p>
+                        <p class="mb-1"><strong>Photographer:</strong> John Doe</p>
+                        <p class="mb-1"><strong>Location:</strong> Sydney Opera House</p>
+                        <p class="mb-1"><strong>Date & Time:</strong> 25 Aug 2025, 5:00 PM</p>
+                    </div>
+                    <div class="text-end">
+                        <p class="fw-bold">$1200</p>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                            <button class="btn btn-sm btn-danger">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end fw-bold fs-5 mt-3">
+                    Total: $1200
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Customer Details -->
+        <div class="col-lg-6">
+            <div class="bg-light shadow-sm p-4 mt-3 rounded">
+                <h4 class="mb-3">Customer Details</h4>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Suburb</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">State/Province/Region</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Postcode</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-end mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Country Code</label>
+                            <select class="form-select">
+                                <option value="+61">+61 (AU)</option>
+                                <option value="+91">+91 (IN)</option>
+                                <option value="+1">+1 (US)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4">Payment Method</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod">
+                        <label class="form-check-label">Google Pay</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="paymentMethod" checked>
+                        <label class="form-check-label">Card Payment</label>
+                    </div>
+
+                    <div class="border rounded p-3 bg-light">
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-control" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-4">Proceed to Pay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
