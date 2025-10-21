@@ -36,3 +36,11 @@ def login():
 @app.route('/register')
 def register():
     return render_template('register.html', hide_nav=True)
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('error.html', error_code=404), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('error.html', error_code=500), 500
