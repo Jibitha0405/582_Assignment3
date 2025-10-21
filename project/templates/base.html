@@ -56,12 +56,13 @@
                 </ul>
 
                 <!-- Center: Search Bar -->
-                <form class="d-flex position-relative mx-2" method="get" action="{{ url_for('search') }}"
-                    style="max-width: 240px;">
-                    <input class="form-control rounded-pill ps-5 py-1" type="search" name="q" placeholder="Search..."
-                        aria-label="Search">
+                <!-- Center: Visual-only Search Bar -->
+                <div class="position-relative mx-2" style="max-width: 240px;">
+                    <input class="form-control rounded-pill ps-5 py-1" type="text" placeholder="Search..."
+                        aria-label="Search" disabled>
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                </form>
+                </div>
+
 
                 <!-- Right: Cart + Notifications -->
                 <div class="d-flex align-items-center gap-3">
