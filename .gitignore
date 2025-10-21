@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/582_Assignment3/CopilotIndices/17.14.1231.31060
+/.vs/582_Assignment3/FileContentIndex
+/.vs/582_Assignment3/v17/.wsuo
+/.vs
+/project/__pycache__
