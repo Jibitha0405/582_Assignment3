@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <title>{% block title %}Visual Alchemy{% endblock %}</title> -->
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,24 +17,26 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
         <div class="container-fluid">
+
             <!-- Brand -->
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
                 <img src="{{ url_for('static', filename='img/icon.png') }}" width="45" height="45" alt="">
             </a>
 
-            <!-- Toggle (for mobile) -->
+            <!-- Mobile Toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Navbar Content -->
+            <!-- Navbar Links + Search + Icons -->
             <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarContent">
 
-                <!-- Left: Nav Links with active highlight -->
+                <!-- Left: Nav Links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
                     <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'index' %}active text-primary{% endif %}"
@@ -55,17 +56,16 @@
                     </li>
                 </ul>
 
-                <!-- Center: Search Bar -->
-                <!-- Center: Visual-only Search Bar -->
-                <div class="position-relative mx-2" style="max-width: 240px;">
-                    <input class="form-control rounded-pill ps-5 py-1" type="text" placeholder="Search..."
-                        aria-label="Search" disabled>
-                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                </div>
+                <!-- Right: Search + Cart + Notifications -->
+                <div class="d-flex flex-column flex-md-row align-items-center gap-2 gap-md-3 ms-auto">
 
+                    <!-- Search Bar (visual only) -->
+                    <div class="position-relative flex-shrink-1" style="max-width: 240px;">
+                        <input class="form-control rounded-pill ps-5 py-1" type="text" placeholder="Search..."
+                            aria-label="Search" disabled>
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    </div>
 
-                <!-- Right: Cart + Notifications -->
-                <div class="d-flex flex-column flex-sm-row align-items-center gap-2 gap-sm-3 ms-auto">
                     <!-- Cart -->
                     <div class="position-relative">
                         <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-3 py-1"
@@ -106,8 +106,8 @@
                             </li>
                         </ul>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </nav>
