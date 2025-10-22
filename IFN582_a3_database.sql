@@ -20,8 +20,7 @@ CREATE TABLE user (
     name VARCHAR(100),
     location_id INT,
     email VARCHAR(100) UNIQUE,
-    phone VARCHAR(20),
-    FOREIGN KEY (location_id) REFERENCES location(id)
+    phone VARCHAR(20)
 );
 
 -- 3. photographer

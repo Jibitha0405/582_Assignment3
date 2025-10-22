@@ -23,7 +23,7 @@
         <div class="container-fluid">
 
             <!-- Brand -->
-            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
                 <img src="{{ url_for('static', filename='img/icon.png') }}" width="45" height="45" alt="">
             </a>
 
@@ -40,19 +40,19 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
                     <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'index' %}active text-primary{% endif %}"
-                            href="{{ url_for('index') }}">Home</a>
+                            href="{{ url_for('main.index') }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'vendor_gallery' %}active text-primary{% endif %}"
-                            href="{{ url_for('vendor_gallery') }}">Gallery</a>
+                            href="{{ url_for('main.vendor_gallery') }}">Gallery</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'item_details' %}active text-primary{% endif %}"
-                            href="{{ url_for('item_details') }}">Item Details</a>
+                            href="{{ url_for('main.item_details') }}">Item Details</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'checkout' %}active text-primary{% endif %}"
-                            href="{{ url_for('checkout') }}">Checkout</a>
+                            href="{{ url_for('main.checkout') }}">Checkout</a>
                     </li>
                 </ul>
 
@@ -69,7 +69,7 @@
                     <!-- Cart -->
                     <div class="position-relative">
                         <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-3 py-1"
-                            href="{{ url_for('checkout') }}">
+                            href="{{ url_for('main.checkout') }}">
                             <i class="bi bi-cart-fill"></i>
                             <span>Cart</span>
                         </a>
@@ -113,7 +113,7 @@
     </nav>
 
     <!-- Flash Messages -->
-    <div class="container mt-3">
+    <!-- <div class="container mt-3">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
@@ -124,7 +124,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-    </div>
+    </div> -->
 
     <!-- Page Content -->
     <main class="flex-fill">
@@ -139,7 +139,7 @@
             <div class="mt-2">
                 <a href="#" class="text-light text-decoration-none me-3">Privacy Policy</a>
                 <a href="#" class="text-light text-decoration-none me-3">Terms of Use</a>
-                <a href="{{ url_for('vendor_management') }}" class="text-light text-decoration-none">I am a
+                <a href="{{ url_for('main.vendor_management') }}" class="text-light text-decoration-none">I am a
                     Photographer</a>
             </div>
         </div>

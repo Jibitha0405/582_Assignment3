@@ -1,8 +1,24 @@
 from flask import Flask
+from flask_mysqldb import MySQL
 
-# Create Flask app instance
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key_here'  # optional but recommended
+mysql = MySQL()
 
-# Import routes after creating the app
-from project import views
+def create_app():
+    app = Flask(__name__)
+
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = 'Jibitha@123'   # Replace with your MySQL password
+    app.config['MYSQL_DB'] = 'IFN582_a3_database'
+    app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+    app.secret_key = 'IFN582_a3'
+
+    mysql.init_app(app)
+
+    # Import and register blueprint
+    from project.views import main
+    app.register_blueprint(main)
+
+
+    return app
