@@ -1,20 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from project import mysql
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import hashlib
 
 # Create a Blueprint instance
 main = Blueprint('main', __name__)
 
 # ---------------- ROUTES ----------------
 
-@main.route('/', endpoint='index')
-def index():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT DATABASE();")
-    db_name = cur.fetchone()
-    cur.close()
-    return render_template('index.html', db_name=db_name[0])
 
 
 
@@ -42,17 +35,16 @@ def item_details():
 def error():
     return render_template('error.html')
 
+# Signin/Login Page
 @main.route('/signin_login.html')
 def signin_login():
     return render_template('signin_login.html', hide_nav=True)
 
-@main.route('/register')
-def register():
-    return render_template('register.html', hide_nav=True)
-
+# ---------------- SIGN UP ----------------
 @main.route('/signin', methods=['GET', 'POST'])
 def signin():
     error_email = None
+    error_password = None
 
     if request.method == 'POST':
         name = request.form.get('name')
@@ -60,21 +52,21 @@ def signin():
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
 
-        # Password confirmation check
         if password != confirm_password:
-            error_email = "Passwords do not match."
+            error_password = "Passwords do not match."
         else:
             cur = mysql.connection.cursor()
             try:
-                # Check if user already exists
+                # Check if email exists
                 cur.execute("SELECT * FROM user WHERE email = %s", (email,))
                 existing_user = cur.fetchone()
 
                 if existing_user:
                     error_email = "This email is already registered."
                 else:
-                    # Hash password and insert new user
-                    hashed_password = generate_password_hash(password)
+                    # Hash password using SHA-256
+                    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
                     cur.execute(
                         "INSERT INTO user (name, email, password) VALUES (%s, %s, %s)",
                         (name, email, hashed_password)
@@ -85,27 +77,41 @@ def signin():
             finally:
                 cur.close()
 
-    return render_template('signin_login.html', error_email=error_email)
+    return render_template('signin_login.html', error_email=error_email, error_password=error_password)
 
 
+# ---------------- LOGIN ----------------
+import hashlib
+from flask import request, redirect, url_for, flash, session
+from project import mysql
 
-# Login
 @main.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
 
+    # Hash the input password with SHA-256
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
     cur = mysql.connection.cursor()
-    cur.execute("SELECT password FROM user WHERE email=%s", (email,))
-    user = cur.fetchone()
+    # Query to check if email and password match
+    cur.execute("SELECT id, name FROM user WHERE email=%s AND password=%s", (email, hashed_password))
+    user = cur.fetchone()  # Returns None if no match
     cur.close()
 
-    if user and check_password_hash(user[0], password):
+    if user:
+        user_id, user_name = user
+        # Optionally, save user info in session
+        session['user_id'] = user_id
+        session['user_name'] = user_name
+
         flash("Login successful!", "success")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     else:
-        flash("Invalid credentials", "danger")
-        return redirect(url_for('login'))
+        flash("Invalid email or password", "danger")
+        return redirect(url_for('main.signin_login'))
+
+
 
 # ---------------- ERROR HANDLERS ----------------
 
@@ -116,3 +122,17 @@ def not_found_error(error):
 @main.app_errorhandler(500)
 def internal_error(error):
     return render_template('error.html', error_code=500), 500
+
+@main.route('/', endpoint='index')
+def index():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT DATABASE();")
+    db_name_row = cur.fetchone()  # Returns a tuple like ('your_db_name',)
+    cur.close()
+
+    if db_name_row:
+        db_name = db_name_row['DATABASE()']  # Access the first element of the tuple
+    else:
+        db_name = "Unknown"
+
+    return render_template('index.html', db_name=db_name)

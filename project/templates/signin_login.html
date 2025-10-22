@@ -7,25 +7,26 @@
 
   <!-- Image Section -->
   <div class="w-100 w-xl-60">
-    <img src="{{ url_for('static', filename='img/loginCamera.jpg') }}" class="img-fluid left-img" alt="Camera image">
-  </div>
-
-  <div class="top-right-tabs">
-    <ul class="nav nav-tabs" id="authTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button"
-          role="tab">Sign Up</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
-          role="tab">Log In</button>
-      </li>
-    </ul>
+    <img src="{{ url_for('static', filename='img/loginCamera.jpg') }}" class="img-fluid left-img vh-100"
+      alt="Camera image" style="object-fit: cover;">
   </div>
 
   <!-- Form Section -->
-  <div class="w-100 w-md-40 d-flex justify-content-center align-items-center px-4 py-5">
+  <div class="w-100 w-md-40 d-flex justify-content-center align-items-start px-4 py-5">
     <div class="w-100" style="max-width: 450px;">
+
+      <!-- Tabs -->
+      <ul class="nav nav-tabs justify-content-end mb-3" id="authTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button"
+            role="tab">Sign Up</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
+            role="tab">Log In</button>
+        </li>
+      </ul>
+
       <!-- Flash Messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -36,16 +37,15 @@
       </div>
       {% endif %}
       {% endwith %}
+
       <img src="{{ url_for('static', filename='img/icon.png') }}" class="form-logo d-block mx-auto mb-3"
         alt="Camera icon">
 
       <!-- Tab Content -->
       <div class="tab-content" id="authTabsContent">
         <!-- Sign Up Form -->
-        <!-- Sign Up Form -->
         <div class="tab-pane fade show active" id="signup" role="tabpanel">
           <form method="POST" action="{{ url_for('main.signin') }}">
-
             <div class="toggle-buttons d-flex justify-content-center gap-2 mb-4">
               <input type="radio" name="role_signup" id="signup_customer" value="customer" checked>
               <label for="signup_customer">I am a Customer</label>
@@ -69,11 +69,13 @@
             <div class="mb-3">
               <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password"
                 required>
+              {% if error_password %}
+              <small class="text-danger">{{ error_password }}</small>
+              {% endif %}
             </div>
             <button type="submit" class="btn btn-auth w-100 mt-2">Sign Up</button>
           </form>
         </div>
-
 
         <!-- Login Form -->
         <div class="tab-pane fade" id="login" role="tabpanel">
