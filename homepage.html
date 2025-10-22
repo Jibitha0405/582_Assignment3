@@ -1,0 +1,497 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Alchemy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm">
+        <div class="container-fluid d-flex flex-column flex-lg-row justify-content-lg-between align-items-center gap-3">
+
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/icon.png" width="50" height="50" alt="">
+            </a>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end gap-3 w-100">
+
+
+                <form class="d-flex position-relative flex-grow-1" style="min-width: 200px;">
+                    <input class="form-control rounded-pill ps-5" type="search" placeholder="Search"
+                           aria-label="Search">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </form>
+
+
+                <div class="position-relative" style="min-width: 120px;">
+                    <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-4"
+                       href="checkout.html">
+                        <i class="bi bi-cart-fill"></i>
+                        <span>Cart</span>
+                    </a>
+                    <span class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">2</span>
+                </div>
+
+                <div class="nav-item dropdown position-relative" style="min-width: 60px;">
+                    <a class="btn btn-light rounded-circle position-relative d-flex align-items-center justify-content-center"
+                       href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                       style="width: 45px; height: 45px;">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2"
+                        aria-labelledby="notificationDropdown" style="width: 320px; white-space: normal;">
+                        <li class="p-2 rounded bg-light mb-2">
+
+                            <div class="fw-bold text-success">Booking Accepted ✅</div>
+                            <div>Your Wedding Shoot booking for 4 May 2025 has been accepted.</div>
+                            <div class="small text-muted mt-1">2 hrs ago</div>
+                            <div class="text-end mt-2">
+                                <button class="btn btn-sm btn-outline-secondary">OK</button>
+                            </div>
+                        </li>
+                        <li class="p-2 rounded bg-light">
+                            <div class="fw-bold text-danger">Booking Declined ❌</div>
+                            <div>
+                                Your Save The Date booking for 17 April 2025 has been Rejected since I have another
+                                booking on that day.
+                            </div>
+                            <div class="small text-muted mt-1">1 day ago</div>
+                            <div class="text-end mt-2">
+                                <button class="btn btn-sm btn-outline-secondary">OK</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-----Image caraousel----->
+    <section class="carousel-section">
+        <div id="studioCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active" style="background-image: url('/img/birthdaycelebration.jpg')">
+                    <div class="carousel-content">
+                        <h1 class="carousel-title">Capture Your Perfect Moments</h1>
+                        <p class="carousel-text">Professional portrait photography that tells your unique story. Let us create timeless memories that you'll cherish forever.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item" style="background-image: url('/img/engagement.jpg')">
+                    <div class="carousel-content">
+                        <h1 class="carousel-title">Wedding Photography Excellence</h1>
+                        <p class="carousel-text">Capturing the magic of your special day with artistic vision and technical expertise. Every moment, every emotion, perfectly preserved.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item" style="background-image: url('/img/slide3.jpg')">
+                    <div class="carousel-content">
+                        <h1 class="carousel-title">Landscape & Nature Photography</h1>
+                        <p class="carousel-text">Exploring the beauty of nature through our lens. Breathtaking landscapes and stunning natural scenes captured with artistic precision.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#studioCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#studioCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+
+    <div class="filterContainer container bg-white p-3 m-3 mx-auto rounded d-flex justify-content-center gap-3 ">
+        <div class="d-flex flex-column flex-lg-row gap-3 align-items-center my-0">
+            <h1 class="fs-2">Filter</h1>
+
+
+            <div class="dropdown ms-3">
+                <button class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                        type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Location
+                </button>
+                <ul class="dropdown-menu border border-light-subtle" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#">Brisbane</a></li>
+                    <li><a class="dropdown-item" href="#">Sydney</a></li>
+                    <li><a class="dropdown-item" href="#">Perth</a></li>
+                </ul>
+            </div>
+
+
+            <div class="dropdown ms-3">
+                <button class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Event
+                </button>
+                <ul class="dropdown-menu border border-light-subtle">
+                    <li><a class="dropdown-item" href="#">Wedding</a></li>
+                    <li><a class="dropdown-item" href="#">Engagement</a></li>
+                    <li><a class="dropdown-item" href="#">Baptism</a></li>
+                    <li><a class="dropdown-item" href="#">Birthday</a></li>
+                </ul>
+            </div>
+
+
+            <div class="dropdown ms-3">
+                <button class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Price Range
+                </button>
+                <ul class="dropdown-menu p-3 border border-light-subtle" style="min-width: 250px;">
+                    <li><a class="dropdown-item" href="#">$100 - $500</a></li>
+                    <li><a class="dropdown-item" href="#">$501 - $1000</a></li>
+                    <li><a class="dropdown-item" href="#">$1001 - $1500</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <p class="dropdown-header small text-muted">Custom Range</p>
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="number" class="form-control form-control-sm" placeholder="Start $"
+                                   aria-label="Start Price">
+                            <input type="number" class="form-control form-control-sm" placeholder="End $"
+                                   aria-label="End Price">
+                        </div>
+                        <button class="btn btn-sm btn-primary w-100">Apply Filter</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container my-2">
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-secondary rounded-pill px-3 py-2">
+                Sydney <span class="ms-2" style="cursor:pointer;">&times;</span>
+            </span>
+            <span class="badge bg-secondary rounded-pill px-3 py-2">
+                Wedding <span class="ms-2" style="cursor:pointer;">&times;</span>
+            </span>
+            <span class="badge bg-secondary rounded-pill px-3 py-2">
+                $501 - $1000 <span class="ms-2" style="cursor:pointer;">&times;</span>
+            </span>
+        </div>
+    </div>
+
+
+
+    <div class="container mt-4 h-100">
+        <div class="row g-4">
+
+            <div class="col-12 text-center mb-4">
+                <h2 class="section-title">Popular Shoots</h2>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="event-card card shadow-sm">
+                    <img src="img/wedding.jpg" class="card-img-top" alt="Wedding Shoot">
+                    <div class="card-body">
+                        <h5 class="card-title">Wedding Shoot</h5>
+                        <p class="card-text">10 hours - $1400</p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                               href="item_details.html">
+                                <span>View Details</span>
+                            </a>
+                            <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="event-card card shadow-sm">
+                    <img src="img/engagement.jpg" class="card-img-top" alt="Engagement">
+                    <div class="card-body">
+                        <h5 class="card-title">Engagement</h5>
+                        <p class="card-text">6 hours - $1000</p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                               href="item_details.html">
+                                <span>View Details</span>
+                            </a>
+                            <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="event-card card shadow-sm">
+                    <img src="img/weddingreception.jpg" class="card-img-top" alt="Wedding Reception">
+                    <div class="card-body">
+                        <h5 class="card-title">Wedding Reception</h5>
+                        <p class="card-text">8 hours - $1400</p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                               href="item_details.html">
+                                <span>View Details</span>
+                            </a>
+                            <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="event-card card shadow-sm">
+                    <img src="img/savethedate.jpg" class="card-img-top" alt="Save the Date">
+                    <div class="card-body">
+                        <h5 class="card-title">Save the Date Shoot</h5>
+                        <p class="card-text">4 hours - $600</p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                               href="item_details.html">
+                                <span>View Details</span>
+                            </a>
+                            <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 text-center mt-3">
+                <a href="vendor_gallery.html" class="action-btn">Click Here <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="col-12 text-center mb-4">
+                <h2 class="section-title">Top Photographers</h2>
+            </div>
+            <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+                <a href="vendor_gallery.html" class="text-decoration-none">
+                    <div class="card h-100 shadow-lg ">
+                        <img src="img/Italo Melo.jpg" class="card-img-top" alt="Photo 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Italo Melo</h5>
+                            <i class="bi bi-geo-alt-fill">Brisbane</i>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-half text-warning"></i>
+                                <span class="small text-muted ms-1">4.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+                <a href="vendor_gallery.html" class="text-decoration-none">
+                    <div class="card h-100 shadow-lg">
+                        <img src="img/Libuda Stephen.jpg" class="card-img-top" alt="Photo 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Libuda Stephen</h5>
+                            <i class="bi bi-geo-alt-fill">Brisbane</i>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <span class="small text-muted ms-1">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+                <a href="vendor_gallery.html" class="text-decoration-none">
+                    <div class="card h-100 shadow-lg">
+                        <img src="img/Mohamed Sadiq.jpg" class="card-img-top" alt="Photo 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Mohamed Sadiq</h5>
+                            <i class="bi bi-geo-alt-fill">Sydney</i>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star text-warning"></i>
+                                <span class="small text-muted ms-1">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+                <a href="vendor_gallery.html" class="text-decoration-none">
+                    <div class="card h-100 shadow-lg">
+                        <img src="img/Nano Erdozain.jpg" class="card-img-top" alt="Photo 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Nano Erdozain</h5>
+                            <i class="bi bi-geo-alt-fill">Perth</i>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <span class="small text-muted ms-1">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 text-center mt-3">
+                <a href="index.html" class="action-btn">View More<i class="bi bi-chevron-up"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!------ About Us ----->
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-image">
+                        <img src="/img/photography-bg.jpg" alt="Our Photography Studio" class="img-fluid rounded-3">
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="about-content">
+                        <h2 class="section-title">About Visual Alchemy</h2>
+                        <p>
+                            Visual Alchemy is a premier photography platform that connects talented photographers
+                            with clients seeking to capture life's most precious moments. Founded in 2020, we've
+                            revolutionized how people find and book professional photography services.Our mission is to make professional
+                            photography accessible to everyone while providing photographers with opportunities to grow their business and showcase their creative talent.
+                        </p>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Left Side Content -->
+                <div class="col-lg-6">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="contact-subtitle">Have questions? We'd love to hear from you</p>
+
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="bi bi-telephone-fill"></i>
+                            <div>
+                                <h5>Phone</h5>
+                                <p>+61 0768586678</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <div>
+                                <h5>Email</h5>
+                                <p>my123@visualalchemy.com</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <div>
+                                <h5>Address</h5>
+                                <p>CBD street, Brisbane, Australia</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="mailto:hello@visualalchemy.com" class="action-btn">
+                        Contact Us <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Right Side Image -->
+                <div class="col-lg-6">
+                    <div class="contact-image"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="img/icon.png" width="40" height="40" alt="Visual Alchemy" class="me-2">
+                        <h5 class="fw-bold mb-0">Visual Alchemy</h5>
+                    </div>
+                    <p class="text-light-50 mb-3">
+                        Connecting photographers with clients to create mesmerizing moments.
+                        Platform for professional photography services.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="text-light-50 me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light-50 me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light-50 me-3"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-light-50"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h6 class="fw-bold mb-3">For Clients</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Find Photographers</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Book Services</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Pricing</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">How It Works</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h6 class="fw-bold mb-3">For Photographers</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="vendor_management.html" class="text-light-50 text-decoration-none">Join as Photographer</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Grow Your Business</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Resources</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h6 class="fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Contact</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Terms of Use</a></li>
+                        <li class="mb-2"><a href="#" class="text-light-50 text-decoration-none">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-light-50">
+            <div class="text-center text-light-50">
+                <p class="mb-0">&copy; 2025 Visual Alchemy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>
