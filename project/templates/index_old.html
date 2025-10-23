@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Visual Alchemy{% endblock %}
+
+{% block content %}
+<div class="filterContainer container bg-white p-3 m-3 mx-auto rounded d-flex justify-content-center gap-3 ">
+    <div class="d-flex flex-column flex-lg-row gap-3 align-items-center my-0">
+        <h1 class="fs-2">Filter</h1>
+
+        <div class="dropdown ms-3">
+            <button
+                class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Location
+            </button>
+            <ul class="dropdown-menu border border-light-subtle" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#">Brisbane</a></li>
+                <li><a class="dropdown-item" href="#">Sydney</a></li>
+                <li><a class="dropdown-item" href="#">Perth</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown ms-3">
+            <button
+                class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Event
+            </button>
+            <ul class="dropdown-menu border border-light-subtle">
+                <li><a class="dropdown-item" href="#">Wedding</a></li>
+                <li><a class="dropdown-item" href="#">Engagement</a></li>
+                <li><a class="dropdown-item" href="#">Baptism</a></li>
+                <li><a class="dropdown-item" href="#">Birthday</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown ms-3">
+            <button
+                class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Price Range
+            </button>
+            <ul class="dropdown-menu p-3 border border-light-subtle" style="min-width: 250px;">
+                <li><a class="dropdown-item" href="#">$100 - $500</a></li>
+                <li><a class="dropdown-item" href="#">$501 - $1000</a></li>
+                <li><a class="dropdown-item" href="#">$1001 - $1500</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <p class="dropdown-header small text-muted">Custom Range</p>
+                    <div class="d-flex gap-2 mb-2">
+                        <input type="number" class="form-control form-control-sm" placeholder="Start $"
+                            aria-label="Start Price">
+                        <input type="number" class="form-control form-control-sm" placeholder="End $"
+                            aria-label="End Price">
+                    </div>
+                    <button class="btn btn-sm btn-primary w-100">Apply Filter</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container my-2">
+    <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-secondary rounded-pill px-3 py-2">Sydney <span class="ms-2"
+                style="cursor:pointer;">&times;</span></span>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">Wedding <span class="ms-2"
+                style="cursor:pointer;">&times;</span></span>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">$501 - $1000 <span class="ms-2"
+                style="cursor:pointer;">&times;</span></span>
+    </div>
+</div>
+
+<div class="container mt-4 h-100">
+    <div class="row g-4">
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Italo Melo.jpg') }}" class="card-img-top"
+                        alt="Photo 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Italo Melo</h5>
+                        <i class="bi bi-geo-alt-fill">Brisbane</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Libuda Stephen.jpg') }}" class="card-img-top"
+                        alt="Photo 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Libuda Stephen</h5>
+                        <i class="bi bi-geo-alt-fill">Brisbane</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Mohamed Sadiq.jpg') }}" class="card-img-top"
+                        alt="Photo 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Mohamed Sadiq</h5>
+                        <i class="bi bi-geo-alt-fill">Sydney</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Nano Erdozain.jpg') }}" class="card-img-top"
+                        alt="Photo 4">
+                    <div class="card-body">
+                        <h5 class="card-title">Nano Erdozain</h5>
+                        <i class="bi bi-geo-alt-fill">Perth</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Rafan Barros.jpg') }}" class="card-img-top"
+                        alt="Photo 5">
+                    <div class="card-body">
+                        <h5 class="card-title">Rafan Barros</h5>
+                        <i class="bi bi-geo-alt-fill">Sydney</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Sindre Luis.jpg') }}" class="card-img-top"
+                        alt="Photo 6">
+                    <div class="card-body">
+                        <h5 class="card-title">Sindre Luis</h5>
+                        <i class="bi bi-geo-alt-fill">Perth</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Stefan Stefancik.jpg') }}" class="card-img-top"
+                        alt="Photo 7">
+                    <div class="card-body">
+                        <h5 class="card-title">Stefan Stefancik</h5>
+                        <i class="bi bi-geo-alt-fill">Brisbane</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Suliman Sallehi.jpg') }}" class="card-img-top"
+                        alt="Photo 8">
+                    <div class="card-body">
+                        <h5 class="card-title">Suliman Sallehi</h5>
+                        <i class="bi bi-geo-alt-fill">Sydney</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
+                <div class="card h-100 shadow-lg">
+                    <img src="{{ url_for('static', filename='img/Amderssona Lawrance.jpg') }}" class="card-img-top"
+                        alt="Photo 9">
+                    <div class="card-body">
+                        <h5 class="card-title">Amberssona Lawrance</h5>
+                        <i class="bi bi-geo-alt-fill">Brisbane</i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

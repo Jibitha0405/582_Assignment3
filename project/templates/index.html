@@ -2,9 +2,63 @@
 {% block title %}Visual Alchemy{% endblock %}
 
 {% block content %}
+
+
+
+<!-----Image caraousel----->
+<section class="carousel-section">
+    <div id="studioCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active"
+                style="background-image: url('{{ url_for('static', filename='img/birthdaycelebration.jpg') }}');">
+                <div class="carousel-content">
+                    <h1 class="carousel-title">Capture Your Perfect Moments</h1>
+                    <p class="carousel-text">
+                        Professional portrait photography that tells your unique story.
+                        Let us create timeless memories that you'll cherish forever.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Slide 2 -->
+            <div class="carousel-item"
+                style="background-image: url('{{ url_for('static', filename='img/engagement.jpg') }}');">
+                <div class="carousel-content">
+                    <h1 class="carousel-title">Wedding Photography Excellence</h1>
+                    <p class="carousel-text">Capturing the magic of your special day with artistic vision and
+                        technical expertise. Every moment, every emotion, perfectly preserved.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item"
+                style="background-image: url('{{ url_for('static', filename='img/nature.jpg') }}');">
+                <div class="carousel-content">
+                    <h1 class="carousel-title">Landscape & Nature Photography</h1>
+                    <p class="carousel-text">Exploring the beauty of nature through our lens. Breathtaking
+                        landscapes and stunning natural scenes captured with artistic precision.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#studioCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#studioCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
 <div class="filterContainer container bg-white p-3 m-3 mx-auto rounded d-flex justify-content-center gap-3 ">
     <div class="d-flex flex-column flex-lg-row gap-3 align-items-center my-0">
         <h1 class="fs-2">Filter</h1>
+
 
         <div class="dropdown ms-3">
             <button
@@ -19,6 +73,7 @@
             </ul>
         </div>
 
+
         <div class="dropdown ms-3">
             <button
                 class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
@@ -32,6 +87,7 @@
                 <li><a class="dropdown-item" href="#">Birthday</a></li>
             </ul>
         </div>
+
 
         <div class="dropdown ms-3">
             <button
@@ -60,28 +116,121 @@
         </div>
     </div>
 </div>
-
 <div class="container my-2">
     <div class="d-flex flex-wrap gap-2">
-        <span class="badge bg-secondary rounded-pill px-3 py-2">Sydney <span class="ms-2"
-                style="cursor:pointer;">&times;</span></span>
-        <span class="badge bg-secondary rounded-pill px-3 py-2">Wedding <span class="ms-2"
-                style="cursor:pointer;">&times;</span></span>
-        <span class="badge bg-secondary rounded-pill px-3 py-2">$501 - $1000 <span class="ms-2"
-                style="cursor:pointer;">&times;</span></span>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">
+            Sydney <span class="ms-2" style="cursor:pointer;">&times;</span>
+        </span>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">
+            Wedding <span class="ms-2" style="cursor:pointer;">&times;</span>
+        </span>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">
+            $501 - $1000 <span class="ms-2" style="cursor:pointer;">&times;</span>
+        </span>
     </div>
 </div>
 
+
+
 <div class="container mt-4 h-100">
     <div class="row g-4">
+
+        <div class="col-12 text-center mb-4">
+            <h2 class="section-title">Popular Shoots</h2>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/wedding.jpg') }}" class="card-img-top" alt="Wedding Shoot">
+                <div class="card-body">
+                    <h5 class="card-title">Wedding Shoot</h5>
+                    <p class="card-text">10 hours - $1400</p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                            href="{{ url_for('main.item_details') }}">
+                            <span>View Details</span>
+                        </a>
+                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/engagement.jpg') }}" class="card-img-top" alt="Engagement">
+                <div class="card-body">
+                    <h5 class="card-title">Engagement</h5>
+                    <p class="card-text">6 hours - $1000</p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                            href="{{ url_for('main.item_details') }}">
+                            <span>View Details</span>
+                        </a>
+                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/weddingreception.jpg') }}" class="card-img-top"
+                    alt="Wedding Reception">
+                <div class="card-body">
+                    <h5 class="card-title">Wedding Reception</h5>
+                    <p class="card-text">8 hours - $1400</p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                            href="{{ url_for('main.item_details') }}">
+                            <span>View Details</span>
+                        </a>
+                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+            <div class="event-card card shadow-sm">
+                <img src="{{ url_for('static', filename='img/savethedate.jpg') }}" class="card-img-top"
+                    alt="Save the Date">
+                <div class="card-body">
+                    <h5 class="card-title">Save the Date Shoot</h5>
+                    <p class="card-text">4 hours - $600</p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1"
+                            href="{{ url_for('main.item_details') }}">
+                            <span>View Details</span>
+                        </a>
+                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-end mt-3">
+            <a href="{{ url_for('main.vendor_gallery') }}" class="action-btn">Click Here <i
+                    class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="col-12 text-center mb-4">
+            <h2 class="section-title">Top Photographers</h2>
+        </div>
         <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
             <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
+                <div class="card h-100 shadow-lg ">
                     <img src="{{ url_for('static', filename='img/Italo Melo.jpg') }}" class="card-img-top"
                         alt="Photo 1">
                     <div class="card-body">
                         <h5 class="card-title">Italo Melo</h5>
                         <i class="bi bi-geo-alt-fill">Brisbane</i>
+                        <div class="rating mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-half text-warning"></i>
+                            <span class="small text-muted ms-1">4.5</span>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -95,101 +244,145 @@
                     <div class="card-body">
                         <h5 class="card-title">Libuda Stephen</h5>
                         <i class="bi bi-geo-alt-fill">Brisbane</i>
+                        <div class="rating mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <span class="small text-muted ms-1">5</span>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
-
         <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
             <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
                 <div class="card h-100 shadow-lg">
                     <img src="{{ url_for('static', filename='img/Mohamed Sadiq.jpg') }}" class="card-img-top"
-                        alt="Photo 3">
+                        alt="Photo 2">
                     <div class="card-body">
                         <h5 class="card-title">Mohamed Sadiq</h5>
                         <i class="bi bi-geo-alt-fill">Sydney</i>
+                        <div class="rating mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star text-warning"></i>
+                            <span class="small text-muted ms-1">4</span>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
-
         <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
             <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
                 <div class="card h-100 shadow-lg">
                     <img src="{{ url_for('static', filename='img/Nano Erdozain.jpg') }}" class="card-img-top"
-                        alt="Photo 4">
+                        alt="Photo 2">
                     <div class="card-body">
                         <h5 class="card-title">Nano Erdozain</h5>
                         <i class="bi bi-geo-alt-fill">Perth</i>
+                        <div class="rating mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <span class="small text-muted ms-1">5</span>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
-
-        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
-            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
-                    <img src="{{ url_for('static', filename='img/Rafan Barros.jpg') }}" class="card-img-top"
-                        alt="Photo 5">
-                    <div class="card-body">
-                        <h5 class="card-title">Rafan Barros</h5>
-                        <i class="bi bi-geo-alt-fill">Sydney</i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
-            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
-                    <img src="{{ url_for('static', filename='img/Sindre Luis.jpg') }}" class="card-img-top"
-                        alt="Photo 6">
-                    <div class="card-body">
-                        <h5 class="card-title">Sindre Luis</h5>
-                        <i class="bi bi-geo-alt-fill">Perth</i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
-            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
-                    <img src="{{ url_for('static', filename='img/Stefan Stefancik.jpg') }}" class="card-img-top"
-                        alt="Photo 7">
-                    <div class="card-body">
-                        <h5 class="card-title">Stefan Stefancik</h5>
-                        <i class="bi bi-geo-alt-fill">Brisbane</i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
-            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
-                    <img src="{{ url_for('static', filename='img/Suliman Sallehi.jpg') }}" class="card-img-top"
-                        alt="Photo 8">
-                    <div class="card-body">
-                        <h5 class="card-title">Suliman Sallehi</h5>
-                        <i class="bi bi-geo-alt-fill">Sydney</i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="card col-12 col-sm-6 col-md-4 col-lg-3 bg-transparent border-0">
-            <a href="{{ url_for('main.vendor_gallery') }}" class="text-decoration-none">
-                <div class="card h-100 shadow-lg">
-                    <img src="{{ url_for('static', filename='img/Amderssona Lawrance.jpg') }}" class="card-img-top"
-                        alt="Photo 9">
-                    <div class="card-body">
-                        <h5 class="card-title">Amberssona Lawrance</h5>
-                        <i class="bi bi-geo-alt-fill">Brisbane</i>
-                    </div>
-                </div>
-            </a>
+        <div class="col-12 text-end mt-3">
+            <a href="{{ url_for('main.index_old') }}" class="action-btn">View More<i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
 </div>
+
+<!------ About Us ----->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="about-image">
+                    <img src="{{ url_for('static', filename='img/studio.jpg') }}" alt="Our Photography Studio"
+                        class="img-fluid rounded-3">
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="about-content">
+                    <h2 class="section-title">About Visual Alchemy</h2>
+                    <p>
+                        Visual Alchemy is a premier photography platform that connects talented photographers
+                        with clients seeking to capture life's most precious moments. Founded in 2020, we've
+                        revolutionized how people find and book professional photography services.Our mission is to
+                        make professional
+                        photography accessible to everyone while providing photographers with opportunities to grow
+                        their business and showcase their creative talent.
+                    </p>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Side Content -->
+            <div class="col-lg-6">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="contact-subtitle">Have questions? We'd love to hear from you</p>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="bi bi-telephone-fill"></i>
+                        <div>
+                            <h5>Phone</h5>
+                            <p>+61 0768586678</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <div>
+                            <h5>Email</h5>
+                            <p>my123@visualalchemy.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <div>
+                            <h5>Address</h5>
+                            <p>CBD street, Brisbane, Australia</p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="action-btn">
+                    Contact Us <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Right Side Image -->
+            <div class="col-lg-6">
+                <div class="contact-image"
+                    style="background-image: url('{{ url_for('static', filename='img/Amderssona Lawrance.jpg') }}');">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
 {% endblock %}

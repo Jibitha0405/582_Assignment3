@@ -23,6 +23,23 @@
                 <input type="datetime-local" class="form-control" id="appointmentTime">
             </div>
 
+            <div class="mb-3">
+                <label for="photographer" class="form-label">Choose a Photographer</label>
+                <select class="form-select" id="photographer" required>
+                    <option value="">Select a photographer</option>
+                    <option value="sarah">Italo melo</option>
+                    <option value="michael">Libuda Stephen</option>
+                    <option value="emma">Mohamed Sadiq</option>
+                    <option value="alex">Nano Erdozain</option>
+                    <option value="sarah">Rafan Barros</option>
+                    <option value="michael">Sindre Luis</option>
+                    <option value="emma">Stefan Stefancik</option>
+                    <option value="alex">Suliman Sallehi</option>
+                    <option value="alex">Amberssona Lawrence</option>
+                </select>
+                          
+            </div>
+
             <a href="{{ url_for('main.checkout') }}" class="btn btn-danger">Add to Booking</a>
         </div>
     </div>

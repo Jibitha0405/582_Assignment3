@@ -15,6 +15,22 @@ main = Blueprint('main', __name__)
 def admin():
     return render_template('admin.html')
 
+@main.route('/customer_profile')
+def customer_profile():
+    return render_template('customer_profile.html')
+
+@main.route('/logout')
+def logout():
+    # Clear all session data
+    session.clear()
+    flash("You have been logged out successfully.", "info")
+    return redirect(url_for('main.index'))
+
+@main.route('/index_old')
+def index_old():
+    return render_template('index_old.html')
+
+
 @main.route('/vendor_gallery')
 def vendor_gallery():
     return render_template('vendor_gallery.html')
@@ -104,6 +120,7 @@ def login():
         # Optionally, save user info in session
         session['user_id'] = user_id
         session['user_name'] = user_name
+        session['logged_in'] = True
 
         flash("Login successful!", "success")
         return redirect(url_for('main.index'))

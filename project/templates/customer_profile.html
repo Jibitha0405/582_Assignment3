@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Visual Alchemy{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid full-width py-5">
+    <div class="row g-4 d-flex justify-content-between">
+        <!-- Profile Section -->
+        <div class="col-lg-5 profile-section">
+            <div class="profile-card text-start">
+                <div class="profile-pic-container">
+                    <img src="{{ url_for('static', filename='img/Amderssona Lawrance.jpg') }}" alt="Profile"
+                        onerror="this.onerror=null; this.src='img/default-avatar.png';">
+                    <div>
+                        <label for="profileUpload" class="edit-text">Edit</label>
+                        <input type="file" id="profileUpload" accept="image/*" hidden>
+                    </div>
+                    <h5 class="fw-bold mt-2">Jibitha Rose Baburaj</h5>
+                </div>
+
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input type="text" class="form-control" placeholder="Jibitha Rose Baburaj" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Address</label>
+                        <input type="text" class="form-control" placeholder="Street address or PO Box" />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-md-6 d-flex flex-column">
+                            <label class="form-label fw-semibold text-truncate" title="Suburb">Suburb</label>
+                            <input type="text" class="form-control" placeholder="Suburb" />
+                        </div>
+                        <div class="col-12 col-md-6 d-flex flex-column">
+                            <label class="form-label fw-semibold text-truncate" title="State / Province / Region">State
+                                / Province / Region</label>
+                            <input type="text" class="form-control" placeholder="State" />
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-md-4 d-flex flex-column">
+                            <label class="form-label fw-semibold text-truncate" title="Postcode">Postcode</label>
+                            <input type="text" class="form-control" placeholder="Postcode" />
+                        </div>
+                        <div class="col-12 col-md-4 d-flex flex-column">
+                            <label class="form-label fw-semibold text-truncate" title="Country Code">Country
+                                Code</label>
+                            <input type="text" class="form-control" placeholder="+61" />
+                        </div>
+                        <div class="col-12 col-md-4 d-flex flex-column">
+                            <label class="form-label fw-semibold text-truncate" title="Phone Number">Phone
+                                Number</label>
+                            <input type="text" class="form-control" placeholder="Phone number" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Stats & Appointments -->
+        <div class="col-lg-7 stats-section">
+            <div class="row g-3">
+                <div class="col-6 col-md-3 d-flex">
+                    <div class="stats-card flex-fill text-center">
+                        <h1 class="fw-bold">5</h1>
+                        <p class="text-muted mb-0">All Bookings</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 d-flex">
+                    <div class="stats-card flex-fill text-center">
+                        <h1 class="text-primary fw-bold">2</h1>
+                        <p class="text-muted mb-0">Accepted</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 d-flex">
+                    <div class="stats-card flex-fill text-center">
+                        <h1 class="text-danger fw-bold">5</h1>
+                        <p class="text-muted mb-0">Cancelled</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 d-flex">
+                    <div class="stats-card flex-fill text-center">
+                        <h1 class="text-success fw-bold">2</h1>
+                        <p class="text-muted mb-0">Completed</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Section -->
+            <div class="data-section mt-4 position-relative">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Booking Details</h6>
+                    <i class="bi bi-trash3" style="font-size: 1.2rem; cursor: pointer;"></i>
+                </div>
+
+                <!-- Responsive table wrapper -->
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Date</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>29/10/2025</td>
+                                <td>Save the Date</td>
+                                <td><span class="badge bg-danger-subtle text-danger">Cancelled</span></td>
+                                <td>$50</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>15/11/2025</td>
+                                <td>Wedding</td>
+                                <td><span class="badge bg-info-subtle text-info">Booked</span></td>
+                                <td>$345</td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>11/11/2025</td>
+                                <td>Engagement</td>
+                                <td><span class="badge bg-success-subtle text-success">Done</span></td>
+                                <td>$130</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
