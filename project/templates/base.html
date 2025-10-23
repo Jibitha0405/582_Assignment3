@@ -69,13 +69,28 @@
                     <!-- Cart -->
                     <div class="position-relative">
                         <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-3 py-1"
+                            href="{{ url_for('show_cart') }}">
+                            <i class="bi bi-cart-fill"></i>
+                            <span>Cart</span>
+                        </a>
+                        {% set cart_count = session.get('cart')|length if session.get('cart') else 0 %}
+                        {% if cart_count > 0 %}
+                        <span
+                            class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- <div class="position-relative">
+                        <a class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center gap-2 px-3 py-1"
                             href="{{ url_for('checkout') }}">
                             <i class="bi bi-cart-fill"></i>
                             <span>Cart</span>
                         </a>
                         <span
                             class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">2</span>
-                    </div>
+                    </div> -->
 
                     <!-- Notifications -->
                     <div class="nav-item dropdown">

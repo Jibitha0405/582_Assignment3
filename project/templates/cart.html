@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Shopping Cart - Visual Alchemy{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Your Cart</h5>
+                </div>
+                <div class="card-body">
+                    {% if items %}
+                    {% for item in items %}
+                    <div class="row align-items-center mb-3 pb-3 border-bottom">
+                        <div class="col-md-3">
+                            <img src="{{ url_for('static', filename='img/default_package.jpg') }}"
+                                class="img-fluid rounded"
+                                alt="{{ item.package.name if item.package is defined else item['name'] }}">
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="mb-1">{{ item.package.name if item.package is defined else item['name'] }}</h6>
+                            <small class="text-muted">
+                                {% if item.package is defined %}
+                                {{ item.package.description or 'Photography package' }}
+                                {% else %}
+                                Photography package
+                                {% endif %}
+                            </small>
+                            <div class="mt-1">
+                                <span class="badge bg-light text-dark">
+                                    {% if item.package is defined %}
+                                    {{ item.location.region if item.location else 'No location selected' }}
+                                    {% else %}
+                                    {{ item['location'] }}
+                                    {% endif %}
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    {% if item.package is defined %}
+                                    {{ item.selected_datetime.strftime("%d %b %Y, %I:%M %p") if item.selected_datetime
+                                    else '' }}
+                                    {% else %}
+                                    {{ item['selected_datetime'] }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <strong>${{ "%.2f"|format(item.price if item.package is defined else item['price'])
+                                }}</strong>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            {% if item.package is defined %}
+                            <form action="{{ url_for('remove_cart_item', item_id=item.id) }}" method="POST">
+                                <button class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="mt-4">
+                        <a href="{{ url_for('vendor_gallery') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Continue Browsing
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <h4>Your cart is empty</h4>
+                        <p class="text-muted">Add some photography packages to your cart to get started.</p>
+                        <a href="{{ url_for('vendor_gallery') }}" class="btn btn-primary">Browse Packages</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="col-lg-4">
+            <div class="card sticky-top">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% if items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal ({{ items|length }} item{{ 's' if items|length != 1 else '' }})</span>
+                        <span>${{ "%.2f"|format(total) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Service Fee</span>
+                        <span>$5.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong>Total</strong>
+                        <strong class="text-primary">${{ "%.2f"|format(total + 5.00) }}</strong>
+                    </div>
+                    <div class="d-grid mb-3">
+                        <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+                        </a>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted mb-0">Add items to see summary.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

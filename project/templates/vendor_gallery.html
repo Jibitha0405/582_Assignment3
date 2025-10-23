@@ -10,13 +10,13 @@
 <div class="container py-4">
     <div class="row">
         {% set items = [
-        {'img': 'wedding.jpg', 'title': 'Wedding Shoot', 'price': '10 hours - $1400'},
-        {'img': 'engagement.jpg', 'title': 'Engagement', 'price': '6 hours - $1000'},
-        {'img': 'weddingreception.jpg', 'title': 'Wedding Reception', 'price': '8 hours - $1400'},
-        {'img': 'savethedate.jpg', 'title': 'Save the Date Shoot', 'price': '4 hours - $600'},
-        {'img': 'birthdaycelebration.jpg', 'title': 'Birthday Celebration', 'price': '3 hours - $600'},
-        {'img': 'maternityshoot.jpg', 'title': 'Maternity Shoot', 'price': '4 hours - $600'},
-        {'img': 'baptism.jpg', 'title': 'Baptism', 'price': '5 hours - $1000'}
+        {'id':1,'img': 'wedding.jpg', 'title': 'Wedding Shoot', 'price': '10 hours - $1400'},
+        {'id':2,'img': 'engagement.jpg', 'title': 'Engagement', 'price': '6 hours - $1000'},
+        {'id':3,'img': 'weddingreception.jpg', 'title': 'Wedding Reception', 'price': '8 hours - $1400'},
+        {'id':4,'img': 'savethedate.jpg', 'title': 'Save the Date Shoot', 'price': '4 hours - $600'},
+        {'id':5,'img': 'birthdaycelebration.jpg', 'title': 'Birthday Celebration', 'price': '3 hours - $600'},
+        {'id':6,'img': 'maternityshoot.jpg', 'title': 'Maternity Shoot', 'price': '4 hours - $600'},
+        {'id':7,'img': 'baptism.jpg', 'title': 'Baptism', 'price': '5 hours - $1000'}
         ] %}
 
         {% for item in items %}
@@ -32,6 +32,13 @@
                             href="{{ url_for('item_details') }}">
                             <span>View Details</span>
                         </a>
+                        <form action="{{ url_for('add_to_cart', package_id=item.id) }}" method="POST" class="d-inline">
+                            <input type="hidden" name="selected_datetime" value="2025-10-24 10:00:00">
+                            <input type="hidden" name="location_id" value="1">
+                            <button type="submit" class="btn btn-danger">Add to cart</button>
+                        </form>
+
+
                         <button class="btn btn-danger flex-grow-1">Add to Booking</button>
                     </div>
                 </div>
