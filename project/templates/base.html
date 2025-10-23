@@ -113,17 +113,28 @@
                             aria-expanded="false" style="width: 40px; height: 40px;">
                             <i class="bi bi-person-circle"></i>
                         </a>
+
+                        {% if session.logged_in %}
+                        <!-- Show this when user is logged in -->
                         <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2"
                             aria-labelledby="mobileProfileDropdown" style="min-width: 200px;">
-                            <li><a class="dropdown-item" href="{{ url_for('main.customer_profile') }}"><i class=" bi
-                                    bi-person me-2"></i>My Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.customer_profile') }}"><i
+                                        class="bi bi-person me-2"></i>My Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item text-danger" href="{{ url_for('main.logout') }}"><i
-                                        class=" bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                                        class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
+                        {% else %}
+                        <!-- Show this when user is NOT logged in -->
+                        <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2"
+                            aria-labelledby="mobileProfileDropdown" style="min-width: 200px;">
+                            <li><a class="dropdown-item" href="{{ url_for('main.signin_login') }}"><i
+                                        class="bi bi-person-plus me-2"></i>Sign Up & Login</a></li>
+                        </ul>
+                        {% endif %}
                     </div>
                 </div>
 

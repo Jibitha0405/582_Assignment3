@@ -497,6 +497,13 @@ body {
     border-color: #0d1b3e;
 }
 
+.dropdown-menu {
+    background-color: #2a2a3e !important;
+    /* Match navbar tone */
+    color: #ffffff;
+}
+
+
 .top-right-tabs {
     position: absolute;
     top: 20px;
