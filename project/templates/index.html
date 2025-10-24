@@ -149,7 +149,13 @@
                             href="{{ url_for('main.item_details') }}">
                             <span>View Details</span>
                         </a>
-                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                            <input type="hidden" name="item_name" value="Wedding Shoot">
+                            <input type="hidden" name="item_price" value="1400">
+                            <input type="hidden" name="item_duration" value="10 hours">
+                            <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </form>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -166,7 +172,12 @@
                             href="{{ url_for('main.item_details') }}">
                             <span>View Details</span>
                         </a>
-                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                            <input type="hidden" name="item_name" value="Wedding Shoot">
+                            <input type="hidden" name="item_price" value="1400">
+                            <input type="hidden" name="item_duration" value="10 hours">
+                            <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -184,7 +195,15 @@
                             href="{{ url_for('main.item_details') }}">
                             <span>View Details</span>
                         </a>
-                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                            <input type="hidden" name="package_id" value="1">
+                            <input type="hidden" name="item_name" value="Wedding Shoot">
+                            <input type="hidden" name="item_price" value="1400">
+                            <input type="hidden" name="item_duration" value="10 hours">
+                            <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </form>
+
+
                     </div>
                 </div>
             </div>
@@ -202,7 +221,12 @@
                             href="{{ url_for('main.item_details') }}">
                             <span>View Details</span>
                         </a>
-                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                            <input type="hidden" name="item_name" value="Wedding Shoot">
+                            <input type="hidden" name="item_price" value="1400">
+                            <input type="hidden" name="item_duration" value="10 hours">
+                            <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        </form>
                     </div>
                 </div>
             </div>

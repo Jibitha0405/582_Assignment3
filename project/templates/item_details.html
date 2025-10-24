@@ -37,10 +37,14 @@
                     <option value="alex">Suliman Sallehi</option>
                     <option value="alex">Amberssona Lawrence</option>
                 </select>
-                          
-            </div>
 
-            <a href="{{ url_for('main.checkout') }}" class="btn btn-danger">Add to Booking</a>
+            </div>
+            <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                <input type="hidden" name="item_name" value="Wedding Shoot">
+                <input type="hidden" name="item_price" value="1400">
+                <input type="hidden" name="item_duration" value="10 hours">
+                <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>
+            </form>
         </div>
     </div>
 </section>
