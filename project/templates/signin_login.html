@@ -7,9 +7,10 @@
 
   <!-- Image Section -->
   <div class="w-100 w-xl-60">
-    <img src="{{ url_for('static', filename='img/loginCamera.jpg') }}" class="img-fluid left-img vh-100"
-      alt="Camera image" style="object-fit: cover;">
+    <img src="{{ url_for('static', filename='img/loginCamera.jpg') }}" class="img-fluid left-img" alt="Camera image">
   </div>
+
+
 
   <!-- Form Section -->
   <div class="w-100 w-md-40 d-flex justify-content-center align-items-start px-4 py-5">
@@ -38,7 +39,7 @@
       {% endif %}
       {% endwith %}
 
-      <img src="{{ url_for('static', filename='img/icon.png') }}" class="form-logo d-block mx-auto mb-3"
+      <img src="{{ url_for('static', filename='img/icon-black.png') }}" class="form-logo d-block mx-auto mb-3"
         alt="Camera icon">
 
       <!-- Tab Content -->
@@ -56,6 +57,9 @@
 
             <div class="mb-3">
               <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+              {% if error_name %}
+              <small class="text-danger">{{ error_name }}</small>
+              {% endif %}
             </div>
             <div class="mb-3">
               <input type="email" class="form-control" name="email" placeholder="Email address" required>
@@ -64,11 +68,13 @@
               {% endif %}
             </div>
             <div class="mb-3">
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
+              <input type="password" class="form-control" name="password" placeholder="Password" required
+                title="Password must be at least 8 characters, contain uppercase & lowercase letters, a number, and a special character">
             </div>
+
             <div class="mb-3">
               <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password"
-                required>
+                required title="Re-enter the same password">
               {% if error_password %}
               <small class="text-danger">{{ error_password }}</small>
               {% endif %}
@@ -80,13 +86,6 @@
         <!-- Login Form -->
         <div class="tab-pane fade" id="login" role="tabpanel">
           <form method="POST" action="{{ url_for('main.login') }}">
-            <div class="toggle-buttons d-flex justify-content-center gap-2 mb-4">
-              <input type="radio" name="role_login" id="login_customer" value="customer" checked>
-              <label for="login_customer">I am a Customer</label>
-
-              <input type="radio" name="role_login" id="login_photographer" value="photographer">
-              <label for="login_photographer">I am a Photographer</label>
-            </div>
 
             <div class="mb-3">
               <input type="email" name="email" class="form-control" placeholder="Email address" required>
