@@ -32,7 +32,10 @@
                             href="{{ url_for('main.item_details') }}">
                             <span>View Details</span>
                         </a>
-                        <button class="btn btn-danger flex-grow-1">Add to Booking</button>
+                        <a class="btn btn-danger flex-grow-1 d-flex align-items-center justify-content-center"
+                            href="{{ url_for('main.item_details', package_name=item.title) }}">
+                            <span>Add to Booking</span>
+                        </a>
                     </div>
                 </div>
             </div>
