@@ -4,11 +4,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
-    <h1>Hi, I am admin</h1>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="list-group shadow-sm">
+                    <a href="*" class="list-group-item list-group-item-action">➕ Add New
+                        Event</a>
+                    <a href="*" class="list-group-item list-group-item-action">📋 Event Requests</a>
+                    <a href="*" class="list-group-item list-group-item-action">📸 View Photographers</a>
+                    <a href="*" class="list-group-item list-group-item-action">👥
+                        View Customers</a>
+                    <a href="*" class="list-group-item list-group-item-action">🖼️
+                        Photographer Portfolios</a>
+                    <a href="*" class="list-group-item list-group-item-action">📅
+                        Booking History</a>
+                    <a href="*" class="list-group-item list-group-item-action text-danger">🚫 Restrict Photographer</a>
+                    <a href="*" class="list-group-item list-group-item-action text-danger">🚫 Restrict Customer</a>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="col-lg-9">
+                <h2 class="mb-4">Welcome, Admin 👋</h2>
+
+                <!-- Stats Overview -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h5>Total Events</h5>
+                            <h1>{{ total_events }}</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h5>Photographers</h5>
+                            <h1>{{ total_photographers }}</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h5>Customers</h5>
+                            <h1>{{ total_customers }}</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h5>Bookings</h5>
+                            <h1>{{ total_bookings }}</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="data-section mb-4">
+                    <h4 class="mb-3">Recent Event Requests</h4>
+                    {% if event_requests %}
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Photographer</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in event_requests %}
+                                <tr>
+                                    <td>{{ event.name }}</td>
+                                    <td>{{ event.photographer }}</td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">{{ event.status }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="*" class="btn btn-sm btn-primary">Approve</a>
+                                        <a href="*" class="btn btn-sm btn-danger">Reject</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No new requests.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Add New Event -->
+                <div class="container mt-5">
+                    <h2 class="text-center mb-4">Admin Dashboard - Event Management</h2>
+
+                    <!-- Flash messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    <div class="container mt-3">
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+
+                    <!-- Add Event Form -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('main.admin_dashboard') }}">
+                                <div class="mb-3">
+                                    <label for="event_name" class="form-label">Event Name</label>
+                                    <input type="text" class="form-control" id="event_name" name="event_name"
+                                        placeholder="Enter event name" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Event</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Event List -->
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Existing Events</h5>
+                            {% if events %}
+                            <ul class="list-group">
+                                {% for event in events %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ event['name'] }}
+                                    <span class="badge bg-secondary">ID: {{ event['id'] }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">No events added yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5 p-3 bg-dark text-white">
+        © {{ current_year }} Admin Dashboard - All Rights Reserved
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

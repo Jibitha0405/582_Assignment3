@@ -42,12 +42,6 @@ def photographer_dashboard():
 # ---------------- ROUTES ----------------
 
 
-
-
-@main.route('/admin')
-def admin():
-    return render_template('admin.html')
-
 @main.route('/customer_profile')
 def customer_profile():
     return render_template('customer_profile.html')
@@ -68,9 +62,9 @@ def index_old():
 def vendor_gallery():
     return render_template('vendor_gallery.html')
 
-@main.route('/admin_dashboard')
-def admin_dashboard():
-    return render_template('admin_dashboard.html')
+# @main.route('/admin_dashboard')
+# def admin_dashboard():
+#     return render_template('admin_dashboard.html')
 
 @main.route('/checkout')
 def checkout():
@@ -203,6 +197,39 @@ def login():
     else:
         flash("Invalid email or password", "danger")
         return redirect(url_for('main.signin_login'))
+
+@main.route('/admin_dashboard', methods=['GET', 'POST'])
+def admin_dashboard():
+    if request.method == 'POST':
+        event_name = request.form.get('event_name', '').strip()
+
+        if not event_name:
+            flash("Event name cannot be empty.", "danger")
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO event (name) VALUES (%s)", (event_name,))
+            mysql.connection.commit()
+            cur.close()
+
+            # Use session flag to track successful add
+            session['event_added'] = True
+            return redirect(url_for('main.admin_dashboard'))
+
+    # Retrieve events
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM event")
+    events = cur.fetchall()
+    cur.close()
+
+    # Check session flag
+    event_added = session.pop('event_added', None)
+        # Show success only when redirected from event submission
+    if session.pop('show_event_success', False):
+        flash("Event added successfully!", "success")
+
+
+    return render_template('admin_dashboard.html', events=events)
+
 
 
 
