@@ -3,40 +3,131 @@ from project import mysql
 from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 import re
+import base64
+
 
 # Create a Blueprint instance
 main = Blueprint('main', __name__)
 
 # ---------------- DASHBOARDS ----------------
 
-@main.route('/', endpoint='customer_dashboard')
-def customer_dashboard():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT DATABASE();")
-    db_name_row = cur.fetchone()  # Returns a tuple like ('your_db_name',)
-    cur.close()
-
-    if db_name_row:
-        db_name = db_name_row['DATABASE()']  # Access the first element of the tuple
-    else:
-        db_name = "Unknown"
-
-    return render_template('customer_dashboard.html', db_name=db_name)
 
 
 @main.route('/photographer_dashboard')
 def photographer_dashboard():
+    photographer_id = session.get('photographer_id')
+
     cur = mysql.connection.cursor()
     cur.execute("SELECT DATABASE();")
-    db_name_row = cur.fetchone()
+    db_row = cur.fetchone()
     cur.close()
 
-    if db_name_row:
-        db_name = db_name_row['DATABASE()']
+    # Safe way to get database name
+    if db_row:
+        # Check if db_row is dict or tuple
+        if isinstance(db_row, dict):
+            db_name = list(db_row.values())[0]
+        else:
+            db_name = db_row[0]
     else:
         db_name = "Unknown"
 
     return render_template('photographer_dashboard.html', db_name=db_name)
+
+
+
+@main.route('/add_service', methods=['POST'])
+def add_service():
+    photographer_id = session.get('photographer_id')
+    if not photographer_id:
+        flash("Login required to add a service.", "danger")
+        return redirect(url_for('photographer_dashboard'))
+
+    event_id = request.form['event_id']
+    hours = request.form['hours']
+    price = request.form['price']
+    description = request.form['description']
+    photo = request.files.get('photo')
+
+    photo_data = photo.read() if photo else None
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO package (photographer_id, event_id, package_image, description, price, photography_duration)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (photographer_id, event_id, photo_data, description, price, hours))
+
+    mysql.connection.commit()
+    cur.close()
+    flash("Service added successfully!", "success")
+
+    return redirect(url_for('photographer_dashboard'))
+
+
+
+# @main.route('/request_event', methods=['GET', 'POST'])
+# def request_event():
+#     photographer_id = session.get('photographer_id')
+
+#     if request.method == 'POST':
+#         event_name = request.form.get('event_name')
+
+#         if not event_name:
+#             flash("Please enter an event name.", "warning")
+#             return redirect(url_for('main.request_event'))
+
+#         cur = mysql.connection.cursor()
+#         try:
+#             cur.execute("""
+#                 INSERT INTO event_request (photographer_id, event_name, status)
+#                 VALUES (%s, %s, 'Pending')
+#             """, (photographer_id, event_name))
+#             mysql.connection.commit()
+#             flash("Your event request has been sent to admin.", "info")
+#         except Exception as e:
+#             mysql.connection.rollback()
+#             flash(f"Error submitting request: {e}", "danger")
+#         finally:
+#             cur.close()
+
+#         return redirect(url_for('main.photographer_dashboard'))
+
+#     return render_template('request_event.html')
+
+@main.route('/admin/event_requests')
+def admin_event_requests():
+    cur = mysql.connection.cursor(dictionary=True)
+    cur.execute("""
+        SELECT er.*, p.name AS photographer_name 
+        FROM event_request er
+        JOIN photographer p ON er.photographer_id = p.id
+        ORDER BY er.created_at DESC
+    """)
+    requests = cur.fetchall()
+    cur.close()
+    return render_template('admin_event_requests.html', requests=requests)
+
+@main.route('/admin/handle_request/<int:request_id>/<string:action>', methods=['POST'])
+def handle_request(request_id, action):
+    cur = mysql.connection.cursor()
+
+    if action == 'approve':
+        # Get event name
+        cur.execute("SELECT event_name FROM event_request WHERE id = %s", (request_id,))
+        row = cur.fetchone()
+        if row:
+            event_name = row[0]
+            # Insert into event table
+            cur.execute("INSERT INTO event (name) VALUES (%s)", (event_name,))
+            cur.execute("UPDATE event_request SET status='Approved' WHERE id=%s", (request_id,))
+    elif action == 'reject':
+        cur.execute("UPDATE event_request SET status='Rejected' WHERE id=%s", (request_id,))
+
+    mysql.connection.commit()
+    cur.close()
+
+    flash("Event request has been processed.", "success")
+    return redirect(url_for('main.admin_event_requests'))
 
 
 # ---------------- ROUTES ----------------
@@ -230,6 +321,38 @@ def admin_dashboard():
 
     return render_template('admin_dashboard.html', events=events)
 
+@main.route('/delete_event/<int:event_id>', methods=['POST'])
+def delete_event(event_id):
+    cur = mysql.connection.cursor()
+    try:
+        # Delete the event
+        cur.execute("DELETE FROM event WHERE id = %s", (event_id,))
+        mysql.connection.commit()
+        flash("Event deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error deleting event: {str(e)}", "danger")
+    finally:
+        cur.close()
+
+    return redirect(url_for('main.admin_dashboard'))
+
+@main.route('/', endpoint='customer_dashboard')
+def customer_dashboard():
+    cur = mysql.connection.cursor()
+
+    # Fetch the database name
+    cur.execute("SELECT DATABASE();")
+    db_name_row = cur.fetchone()
+    db_name = db_name_row['DATABASE()'] if db_name_row else "Unknown"
+
+    # Fetch all events from the 'event' table
+    cur.execute("SELECT name FROM event ORDER BY name ASC")
+    events = cur.fetchall()  # Returns a list of dicts: [{'name': 'Wedding'}, {'name': 'Birthday'}, ...]
+
+    cur.close()
+
+    # Pass both db_name and events to the template
+    return render_template('customer_dashboard.html', db_name=db_name, events=events)
 
 
 

@@ -74,17 +74,21 @@
         </div>
 
 
+        <!-- Event Filter -->
         <div class="dropdown ms-3">
             <button
                 class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
-                type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Event
+                type="button" id="eventDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Events
             </button>
-            <ul class="dropdown-menu border border-light-subtle">
-                <li><a class="dropdown-item" href="#">Wedding</a></li>
-                <li><a class="dropdown-item" href="#">Engagement</a></li>
-                <li><a class="dropdown-item" href="#">Baptism</a></li>
-                <li><a class="dropdown-item" href="#">Birthday</a></li>
+            <ul class="dropdown-menu border border-light-subtle" aria-labelledby="eventDropdown">
+                {% if events %}
+                {% for event in events %}
+                <li><a class="dropdown-item" href="#">{{ event['name'] }}</a></li>
+                {% endfor %}
+                {% else %}
+                <li><span class="dropdown-item text-muted">No events available</span></li>
+                {% endif %}
             </ul>
         </div>
 

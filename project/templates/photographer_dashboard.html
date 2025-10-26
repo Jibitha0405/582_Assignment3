@@ -13,72 +13,79 @@
 <div class="container py-4">
     <div class="d-flex justify-content-end align-items-center mb-4">
         <button class="btn btn-primary w-auto" data-bs-toggle="collapse" data-bs-target="#createEventForm">
-            + Create New Event
+            + Create New Event Service
         </button>
     </div>
 
     <div class="collapse mb-4" id="createEventForm">
         <div class="bg-white p-3 border rounded">
-            <h5 class="mb-3">Add New Event</h5>
-            <form>
+            <h5 class="mb-3">Add New Event Service</h5>
+            <form method="POST" action="{{ url_for('main.add_service') }}" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Event Name</label>
-                        <input type="text" class="form-control" placeholder="Enter event name">
+                        <label class="form-label">Select Event</label>
+                        <select name="event_id" class="form-select" required>
+                            <option value="">-- Select Event --</option>
+                            {% for event in events %}
+                            <option value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                            {% if not events %}
+                            <option disabled>No events available</option>
+                            {% endif %}
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Number of Hours</label>
-                        <input type="number" class="form-control" placeholder="e.g. 3">
+                        <input type="number" name="hours" class="form-control" placeholder="e.g. 3" required>
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Price</label>
-                        <input type="text" class="form-control" placeholder="$100">
+                        <input type="number" name="price" class="form-control" placeholder="$100" required>
                     </div>
+
                     <div class="col-md-6">
                         <label class="form-label">Event Photo</label>
-                        <input type="file" class="form-control" accept="image/*">
+                        <input type="file" name="photo" class="form-control" accept="image/*">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control" rows="3"></textarea>
+                    <textarea name="description" class="form-control" rows="3"
+                        placeholder="Enter description"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success">Save Event</button>
+                <button type="submit" class="btn btn-success">Create Service</button>
             </form>
         </div>
     </div>
 
-    <h4 class="mb-3">Your Events</h4>
-    <div class="row">
-        {% set events = [
-        {'img': 'wedding.jpg', 'title': 'Wedding Shoot', 'info': '10 hours - $1400'},
-        {'img': 'engagement.jpg', 'title': 'Engagement', 'info': '6 hours - $1000'},
-        {'img': 'weddingreception.jpg', 'title': 'Wedding Reception', 'info': '8 hours - $1400'},
-        {'img': 'savethedate.jpg', 'title': 'Save the Date Shoot', 'info': '4 hours - $600'},
-        {'img': 'birthdaycelebration.jpg', 'title': 'Birthday Celebration', 'info': '3 hours - $600'},
-        {'img': 'maternityshoot.jpg', 'title': 'Maternity Shoot', 'info': '4 hours - $600'},
-        {'img': 'baptism.jpg', 'title': 'Baptism', 'info': '5 hours - $1000'}
-        ] %}
 
-        {% for e in events %}
-        <div class="col-12 col-sm-6 col-lg-3 mb-4">
-            <div class="event-card card shadow-sm">
-                <img src="{{ url_for('static', filename='img/' ~ e.img) }}" class="card-img-top" alt="{{ e.title }}">
+
+    <h5 class="mt-5 mb-3">My Services</h5>
+    <div class="row">
+        {% for pkg in packages %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                {% if pkg.package_image %}
+                <img src="data:image/jpeg;base64,{{ pkg.package_image | b64encode }}" class="card-img-top"
+                    alt="Service image">
+                {% else %}
+                <img src="{{ url_for('static', filename='img/default.jpg') }}" class="card-img-top" alt="Default image">
+                {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ e.title }}</h5>
-                    <p class="card-text">{{ e.info }}</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-sm btn-primary">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </div>
+                    <h5 class="card-title">{{ pkg.event_name }}</h5>
+                    <p class="card-text">{{ pkg.description }}</p>
+                    <p><strong>Duration:</strong> {{ pkg.photography_duration }} hrs</p>
+                    <p><strong>Price:</strong> ${{ pkg.price }}</p>
                 </div>
             </div>
         </div>
+        {% else %}
+        <p class="text-muted">No services added yet.</p>
         {% endfor %}
     </div>
 

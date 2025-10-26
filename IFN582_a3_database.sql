@@ -55,13 +55,14 @@ CREATE TABLE package (
     id INT AUTO_INCREMENT PRIMARY KEY,
     photographer_id INT NOT NULL,
     event_id INT NOT NULL,
-    package_image_url VARCHAR(200),
+    package_image LONGBLOB,
     description VARCHAR(200),
     price DECIMAL(10,2),
     photography_duration VARCHAR(50),
     FOREIGN KEY (photographer_id) REFERENCES photographer(id),
     FOREIGN KEY (event_id) REFERENCES event(id)
 );
+
 
 -- 7. portfolio
 CREATE TABLE portfolio (
