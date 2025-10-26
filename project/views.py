@@ -1,25 +1,52 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from project import mysql
-from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 import re
 import MySQLdb.cursors
 
-
 # Create a Blueprint instance
 main = Blueprint('main', __name__)
 
-# ---------------- DASHBOARDS ----------------
+
+def get_customer_id(user_id):
+    """Return the customer_id for a logged-in user, or create one if missing."""
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT id FROM customer WHERE user_id=%s", (user_id,))
+    row = cur.fetchone()
+    if row:
+        customer_id = row['id']
+    else:
+        # Create customer row if missing
+        cur.execute("INSERT INTO customer (user_id) VALUES (%s)", (user_id,))
+        mysql.connection.commit()
+        customer_id = cur.lastrowid
+    cur.close()
+    return customer_id
+
+def get_cart_id(customer_id):
+    """Return the cart_id for a customer, create if missing."""
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT id FROM cart WHERE customer_id=%s", (customer_id,))
+    row = cur.fetchone()
+    if row:
+        cart_id = row['id']
+    else:
+        cur.execute("INSERT INTO cart (customer_id) VALUES (%s)", (customer_id,))
+        mysql.connection.commit()
+        cart_id = cur.lastrowid
+    cur.close()
+    return cart_id
+
 
 @main.route('/', endpoint='customer_dashboard')
 def customer_dashboard():
     cur = mysql.connection.cursor()
     cur.execute("SELECT DATABASE();")
-    db_name_row = cur.fetchone()  # Returns a tuple like ('your_db_name',)
+    db_name_row = cur.fetchone()
     cur.close()
 
     if db_name_row:
-        db_name = db_name_row['DATABASE()']  # Access the first element of the tuple
+        db_name = db_name_row['DATABASE()']
     else:
         db_name = "Unknown"
 
@@ -43,30 +70,57 @@ def photographer_dashboard():
 
 # ---------------- ROUTES ----------------
 
-
-@main.route('/')
+@main.route('/index')
 def index():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT * FROM package")
-    packages = cur.fetchall()
-    return render_template('index.html', packages=packages)
 
+    # Fetch all photographers and their info
+    cur.execute("""
+        SELECT p.id AS photographer_id,
+               u.name AS photographer_name,
+               CONCAT(l.address_line, ', ', l.region, ' ', l.postcode) AS location,
+               pf.featured_image AS image
+        FROM photographer p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN location l ON p.location_id = l.id
+        LEFT JOIN portfolio pf ON pf.photographer_id = p.id
+        JOIN package pkg ON pkg.photographer_id = p.id
+    """)
+    photographers = cur.fetchall()
+    cur.close()
+
+    # Pass filters and active badges
+    locations = ['Brisbane', 'Sydney', 'Perth']
+    events = ['Wedding', 'Engagement', 'Baptism', 'Birthday']
+    price_ranges = ['$100 - $500', '$501 - $1000', '$1001 - $1500']
+    active_filters = ['Sydney', 'Wedding', '$501 - $1000']  # example, can be dynamic later
+
+    return render_template(
+        'index.html',
+        photographers=photographers,
+        locations=locations,
+        events=events,
+        price_ranges=price_ranges,
+        active_filters=active_filters
+    )
 
 
 @main.route('/admin')
 def admin():
     return render_template('admin.html')
 
+
 @main.route('/customer_profile')
 def customer_profile():
     return render_template('customer_profile.html')
 
+
 @main.route('/logout')
 def logout():
-    # Clear all session data
     session.clear()
     flash("You have been logged out successfully.", "info")
     return redirect(url_for('main.customer_dashboard'))
+
 
 @main.route('/index_old')
 def index_old():
@@ -75,11 +129,31 @@ def index_old():
 
 @main.route('/vendor_gallery')
 def vendor_gallery():
-    return render_template('vendor_gallery.html')
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("""
+        SELECT p.id AS package_id,
+               p.package_image_url,
+               p.description,
+               p.price,
+               p.photography_duration,
+               e.name AS event_name,
+               ph.id AS photographer_id,
+               u.name AS photographer_name
+        FROM package p
+        JOIN event e ON p.event_id = e.id
+        JOIN photographer ph ON p.photographer_id = ph.id
+        JOIN users u ON ph.user_id = u.id
+    """)
+    packages = cur.fetchall()
+    cur.close()
+
+    return render_template('vendor_gallery.html', packages=packages)
+
 
 @main.route('/vendor_management')
 def vendor_management():
     return render_template('vendor_management.html')
+
 
 @main.route('/admin_dashboard')
 def admin_dashboard():
@@ -87,9 +161,9 @@ def admin_dashboard():
 
 @main.route('/item_details')
 def item_details():
-    package_id = request.args.get('package_id', 1)  # default to 1
+    package_id = request.args.get('package_id', 1)
 
-    cur = mysql.connection.cursor()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute("SELECT * FROM package WHERE id = %s", (package_id,))
     item = cur.fetchone()
     cur.close()
@@ -105,11 +179,15 @@ def item_details():
     ]
     locations_list = ["Perth", "Sydney", "Brisbane"]
 
+    # Add dynamic hours (1–12, can adjust as needed)
+    dynamic_hours = list(range(1, 13))
+
     return render_template(
         'item_details.html',
         item=item,
         photographers=photographers_list,
-        locations=locations_list
+        locations=locations_list,
+        dynamic_hours=dynamic_hours
     )
 
 
@@ -117,10 +195,12 @@ def item_details():
 def error():
     return render_template('error.html')
 
+
 # Signin/Login Page
 @main.route('/signin_login.html')
 def signin_login():
     return render_template('signin_login.html', hide_nav=True)
+
 
 # ---------------- SIGN UP ----------------
 @main.route('/signin', methods=['GET', 'POST'])
@@ -136,33 +216,23 @@ def signin():
         confirm_password = request.form.get('confirm_password')
         role = request.form.get('role_signup')
 
-        # --- NAME VALIDATION (Only letters, 2–50 chars) ---
         name_regex = r"^[A-Za-z]{2,50}$"
         if not re.match(name_regex, name):
             error_name = "Username must contain only letters and be 2–50 letters long."
-
-        # --- EMAIL FORMAT VALIDATION ---
         elif not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
             error_email = "Invalid email format."
-
-        # --- PASSWORD MATCH VALIDATION ---
         elif password != confirm_password:
             error_password = "Passwords do not match."
-
         else:
-            cur = mysql.connection.cursor()
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             try:
-                # Check if email already exists
                 cur.execute("SELECT * FROM users WHERE email = %s", (email,))
                 existing_user = cur.fetchone()
 
                 if existing_user:
                     error_email = "This email is already registered."
                 else:
-                    # Hash password
                     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-                    # Insert into users table
                     cur.execute(
                         "INSERT INTO users (name, email, password_hash, role) VALUES (%s, %s, %s, %s)",
                         (name, email, hashed_password, role)
@@ -170,13 +240,12 @@ def signin():
                     mysql.connection.commit()
                     user_id = cur.lastrowid
 
-                    # Role-specific table
                     if role == 'customer':
                         cur.execute("INSERT INTO customer (user_id) VALUES (%s)", (user_id,))
                     elif role == 'photographer':
                         cur.execute("INSERT INTO photographer (user_id) VALUES (%s)", (user_id,))
-
                     mysql.connection.commit()
+
                     flash("Sign up successful! You can now log in.", "success")
                     return redirect(url_for('main.signin_login'))
             finally:
@@ -190,65 +259,160 @@ def signin():
     )
 
 
-
-
-
 # ---------------- LOGIN ----------------
 @main.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
 
-    # Hash the input password
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-    cur = mysql.connection.cursor()
-    # Query to check email and password
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute(
         "SELECT id, name, role FROM users WHERE email=%s AND password_hash=%s",
         (email, hashed_password)
     )
     user = cur.fetchone()
-    cur.close()
 
     if user:
         user_id = user['id']
         user_name = user['name']
         user_role = user['role']
 
-        # Save session info
         session['user_id'] = user_id
         session['user_name'] = user_name
         session['user_role'] = user_role
         session['logged_in'] = True
 
-        print("User role is:", user_id, user_name, user_role)
-
         flash("Login successful!", "success")
 
-        # Redirect based on role
-        if user_role == 'admin':
-            return redirect(url_for('main.admin_dashboard'))
-        elif user_role == 'photographer':
-            return redirect(url_for('main.photographer_dashboard'))
-        else:
-            return redirect(url_for('main.customer_dashboard'))  # customer home
+        # ---------------- MERGE GUEST CART ----------------
+        guest_cart = session.get('guest_cart', [])
+        if guest_cart:
+            cur.execute("SELECT id FROM customer WHERE user_id=%s", (user_id,))
+            customer_row = cur.fetchone()
+            if not customer_row:
+                cur.execute("INSERT INTO customer (user_id) VALUES (%s)", (user_id,))
+                mysql.connection.commit()
+                customer_id = cur.lastrowid
+            else:
+                customer_id = customer_row['id']
+
+            cur.execute("SELECT id FROM cart WHERE customer_id=%s", (customer_id,))
+            cart = cur.fetchone()
+            if not cart:
+                cur.execute("INSERT INTO cart (customer_id) VALUES (%s)", (customer_id,))
+                mysql.connection.commit()
+                cart_id = cur.lastrowid
+            else:
+                cart_id = cart['id']
+
+            for item in guest_cart:
+                cur.execute("SELECT id FROM location WHERE name=%s LIMIT 1", (item['location'],))
+                location_row = cur.fetchone()
+                location_id = location_row['id'] if location_row else None
+
+                cur.execute("""
+                    INSERT INTO cart_item (cart_id, package_id, price, hours, selected_datetime, location_id)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (
+                    cart_id,
+                    item['package_id'],
+                    item['price'],
+                    item['hours'],
+                    item['selected_datetime'],
+                    location_id
+                ))
+            mysql.connection.commit()
+            session.pop('guest_cart', None)
     else:
         flash("Invalid email or password", "danger")
+        cur.close()
         return redirect(url_for('main.signin_login'))
 
+    cur.close()
 
+    if user_role == 'admin':
+        return redirect(url_for('main.admin_dashboard'))
+    elif user_role == 'photographer':
+        return redirect(url_for('main.photographer_dashboard'))
+    else:
+        return redirect(url_for('main.customer_dashboard'))
 
-# ---------------- ERROR HANDLERS ----------------
+@main.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    user_id = session.get('user_id')
+    items = []
 
-@main.app_errorhandler(404)
-def not_found_error(error):
-    return render_template('error.html', error_code=404), 404
+    if user_id:
+        customer_id = get_customer_id(user_id)
+        if customer_id:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT id FROM cart WHERE customer_id=%s", (customer_id,))
+            cart_row = cur.fetchone()
+            if cart_row:
+                cart_id = cart_row['id']
+                cur.execute("""
+                    SELECT ci.id AS cart_item_id,
+                           ci.price AS item_price,
+                           ci.selected_datetime,
+                           CONCAT(l.address_line, ', ', l.region, ' ', l.postcode) AS location_name,
+                           p.id AS package_id,
+                           p.package_image_url,
+                           p.description,
+                           p.price AS base_price,
+                           p.photography_duration,
+                           ph.id AS photographer_id,
+                           u.name AS photographer_name
+                    FROM cart_item ci
+                    JOIN cart c ON ci.cart_id = c.id
+                    JOIN package p ON ci.package_id = p.id
+                    JOIN photographer ph ON p.photographer_id = ph.id
+                    JOIN users u ON ph.user_id = u.id
+                    LEFT JOIN location l ON ci.location_id = l.id
+                    WHERE c.id = %s
+                """, (cart_id,))
+                items = cur.fetchall()
 
-@main.app_errorhandler(500)
-def internal_error(error):
-    return render_template('error.html', error_code=500), 500
+            # Assign a default duration for each item (1 hour)
+            for item in items:
+                item['hours'] = 1  # default, or derive from session if needed
 
+            # Calculate total
+            total = sum(float(item['item_price']) * item['hours'] for item in items)
+            cur.close()
+    else:
+        guest_cart = session.get('guest_cart', [])
+        class CartItem:
+            def __init__(self, d):
+                self.package_id = d.get('package_id')
+                self.name = d.get('name')
+                self.price = d.get('price')
+                self.hours = d.get('hours', 1)  # default to 1 if missing
+                self.duration = d.get('duration')
+                self.photographer = d.get('photographer')
+                self.location = d.get('location')
+                self.selected_datetime = d.get('selected_datetime')
+                self.package_image_url = d.get('package_image_url')
+        items = [CartItem(item) for item in guest_cart]
+        total = sum(float(item.price) * item.hours for item in items)
+
+    if request.method == 'POST':
+        flash("Payment processed successfully!", "success")
+        if user_id:
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                DELETE ci FROM cart_item ci
+                JOIN cart c ON ci.cart_id = c.id
+                WHERE c.customer_id = %s
+            """, (customer_id,))
+            mysql.connection.commit()
+            cur.close()
+        else:
+            session['guest_cart'] = []
+        return redirect(url_for('main.index'))
+
+    return render_template('checkout.html', items=items, total=total)
 
 @main.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -267,158 +431,96 @@ def add_to_cart():
     package_image_url = package['package_image_url'] if package else None
     cur.close()
 
-    # Guest cart (session)
-    if 'guest_cart' not in session:
-        session['guest_cart'] = []
+    if session.get('logged_in'):
+        user_id = session['user_id']
+        customer_id = get_customer_id(user_id)
+        cart_id = get_cart_id(customer_id)
 
-    session['guest_cart'].append({
-        'package_id': package_id,
-        'name': item_name,
-        'price': total_price,
-        'hours': hours,
-        'duration': f"{hours} hour{'s' if hours > 1 else ''}",
-        'photographer': photographer,
-        'location': location,
-        'selected_datetime': selected_datetime,
-        'package_image_url': package_image_url
-    })
-    session.modified = True
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # Prevent duplicate package for same datetime
+        cur.execute("""
+            SELECT COUNT(*) AS count FROM cart_item 
+            WHERE cart_id=%s AND package_id=%s AND selected_datetime=%s
+        """, (cart_id, package_id, selected_datetime))
+        exists = cur.fetchone()['count']
+
+        if not exists:
+            cur.execute("SELECT id FROM location WHERE address_line=%s LIMIT 1", (location,))
+            loc = cur.fetchone()
+            location_id = loc['id'] if loc else None
+
+            cur.execute("""
+                INSERT INTO cart_item (cart_id, package_id, price, hours, selected_datetime, location_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (cart_id, package_id, total_price, hours, selected_datetime, location_id))
+            mysql.connection.commit()
+        cur.close()
+
+    else:
+        # Guest cart
+        if 'guest_cart' not in session:
+            session['guest_cart'] = []
+        exists = any(i['package_id'] == package_id and i['selected_datetime'] == selected_datetime 
+                     for i in session['guest_cart'])
+        if not exists:
+            session['guest_cart'].append({
+                'package_id': package_id,
+                'name': item_name,
+                'price': total_price,
+                'hours': hours,
+                'duration': f"{hours} hour{'s' if hours > 1 else ''}",
+                'photographer': photographer,
+                'location': location,
+                'selected_datetime': selected_datetime,
+                'package_image_url': package_image_url
+            })
+            session.modified = True
 
     flash(f"{item_name} added to your booking! Total: ${total_price:.2f}", "success")
     return redirect(url_for('main.checkout'))
 
 
-@main.route('/remove_cart_item', methods=['POST'])
-def remove_cart_item():
-    index = int(request.form.get('item_index'))
-
-    if 'guest_cart' in session:
-        session['guest_cart'].pop(index)
-        session.modified = True
-        flash("Item removed from cart!", "info")
-
-    return redirect(url_for('main.checkout'))
-
-@main.route('/update_cart_item', methods=['POST'])
-def update_cart_item():
-    index = int(request.form.get('item_index'))
-    new_duration = request.form.get('item_duration')
-
-    if 'guest_cart' in session:
-        # Update duration
-        session['guest_cart'][index]['duration'] = new_duration
-        
-        # Recalculate price based on hours
-        base_price = float(session['guest_cart'][index].get('base_price', 0))
-        hours = int(session['guest_cart'][index].get('hours', 1))
-        session['guest_cart'][index]['price'] = base_price * hours
-
-        session.modified = True
-        flash("Item updated successfully!", "success")
-
-    return redirect(url_for('main.checkout'))
-
-# Clear basket
 @main.route('/clear_cart', methods=['POST'])
 def clear_cart():
-    session['guest_cart'] = []
-    session.modified = True
-    flash("Cart cleared.", "info")
+    user_id = session.get('user_id')
+    cur = mysql.connection.cursor()
+    if user_id:
+        customer_id = get_customer_id(user_id)
+        cur.execute("""
+            DELETE ci FROM cart_item ci
+            JOIN cart c ON ci.cart_id = c.id
+            WHERE c.customer_id = %s
+        """, (customer_id,))
+        mysql.connection.commit()
+    else:
+        session.pop('guest_cart', None)
+    cur.close()
+    flash("Cart cleared successfully.", "info")
     return redirect(url_for('main.checkout'))
 
-@main.route('/checkout', methods=['GET', 'POST'])
-def checkout():
-    
-    user_id = session.get('user_id')
-    items = []
-    total = 0
-    cur = mysql.connection.cursor()
+@main.route('/remove_cart_item', methods=['POST'])
+def remove_cart_item():
+    index = int(request.form.get('item_index', -1))  # default to -1 if not sent
+    guest_cart = session.get('guest_cart', [])
 
-    if user_id:
-        # Logged-in user: fetch cart from database
-        cur.execute("""
-            SELECT ci.id AS cart_item_id,
-                   ci.price AS item_price,
-                   ci.selected_datetime,
-                   l.region AS location_name,
-                   p.id AS package_id,
-                   p.package_image_url,
-                   p.description,
-                   p.price AS base_price,
-                   p.photography_duration,
-                   ph.id AS photographer_id,
-                   ph.name AS photographer_name
-            FROM cart_item ci
-            JOIN package p ON ci.package_id = p.id
-            JOIN photographer ph ON p.photographer_id = ph.id
-            LEFT JOIN location l ON ci.location_id = l.id
-            JOIN cart c ON ci.cart_id = c.id
-            WHERE c.user_id = %s
-        """, (user_id,))
-        items = cur.fetchall()
-        total = sum(float(item['item_price']) for item in items) if items else 0
+    if guest_cart and 0 <= index < len(guest_cart):
+        guest_cart.pop(index)
+        session.modified = True
+        flash("Item removed from cart!", "info")
     else:
-        # Guest: fetch cart from session and convert dicts to objects
-        guest_cart = session.get('guest_cart', [])
-        class CartItem:
-            def __init__(self, d):
-                self.package_id = d.get('package_id')
-                self.name = d.get('name')
-                self.price = d.get('price')
-                self.hours = d.get('hours')
-                self.duration = d.get('duration')
-                self.photographer = d.get('photographer')
-                self.location = d.get('location')
-                self.selected_datetime = d.get('selected_datetime')
-                self.package_image_url = d.get('package_image_url')
-        items = [CartItem(item) for item in guest_cart]
-        total = sum(float(item.price) for item in items) if items else 0
+        flash("No item to remove.", "warning")
 
-    if request.method == 'POST':
-        # Process checkout
-        full_name = request.form.get('full_name')
-        address = request.form.get('address')
-        suburb = request.form.get('suburb')
-        region = request.form.get('region')
-        postcode = request.form.get('postcode')
-        email = request.form.get('email')
-        country_code = request.form.get('country_code')
-        phone = request.form.get('phone')
-        payment_method = request.form.get('payment_method')
-        total_amount = total  # no service fee
-
-        # Insert order into database
-        cur.execute("""
-            INSERT INTO orders 
-            (user_id, full_name, address, suburb, region, postcode, email, phone, payment_method, total_amount)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (user_id if user_id else None, full_name, address, suburb, region, postcode,
-              email, f"{country_code} {phone}", payment_method, total_amount))
-        mysql.connection.commit()
-
-        # Clear cart
-        if user_id:
-            cur.execute("""
-                DELETE ci FROM cart_item ci
-                JOIN cart c ON ci.cart_id = c.id
-                WHERE c.user_id = %s
-            """, (user_id,))
-            mysql.connection.commit()
-        else:
-            session['guest_cart'] = []
-
-        flash("Payment processed successfully! Thank you for your order.", "success")
-        cur.close()
-        return redirect(url_for('main.index'))
-
-    cur.close()
-    return render_template('checkout.html', items=items, total=total)
+    return redirect(url_for('main.checkout'))
 
 
+
+
+
+# ---------------- ERROR HANDLERS ----------------
 @main.app_errorhandler(404)
-def not_found_error(error):
-    return render_template('error.html', error_code=404), 404
+def page_not_found(e):
+    return render_template('error.html', error_message="Page Not Found"), 404
 
 @main.app_errorhandler(500)
-def internal_error(error):
-    return render_template('error.html', error_code=500), 500
+def internal_server_error(e):
+    return render_template('error.html', error_message="Internal Server Error"), 500

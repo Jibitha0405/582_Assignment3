@@ -27,7 +27,7 @@
                         class="img-fluid rounded" alt="{{ item.name }}">
                 </div>
                 <div class="col-9">
-                    <h6 class="mb-1">{{ item.package.name if item.package else item['name'] }}</h6>
+                    <h6 class="mb-1">{{ item.package.name if item.package else item.name }}</h6>
                     <small class="text-muted">
                         {{ item.package.description if item.package else 'Photography package' }}
                     </small>
@@ -39,10 +39,11 @@
                         Location: {{ item.location if item.location is defined else item['location'] }}
                     </p>
                     <div class="mt-2 d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">${{ "%.2f"|format(item.price if item.package else item['price']) }}</span>
+                        <span class="fw-bold">${{ "%.2f"|format(item.price if 'price' in item else item.item_price)
+                            }}</span>
                         <div class="d-flex">
                             <form method="GET"
-                                action="{{ url_for('main.item_details', package_id=item['package_id']) }}">
+                                action="{{ url_for('main.item_details', package_id=item.package_id if item.package else item.package_id) }}">
                                 <input type="hidden" name="edit_index" value="{{ loop.index0 }}">
                                 <button type="submit" class="btn btn-sm btn-primary">Edit</button>
                             </form>
@@ -55,6 +56,7 @@
                 </div>
             </div>
             {% endfor %}
+
 
             <div class="d-flex justify-content-between mt-4">
                 <span>Subtotal ({{ items|length }} item{{ 's' if items|length != 1 else '' }})</span>
@@ -77,15 +79,17 @@
     </div>
 
     {% if not session.get('logged_in') %}
-    <!-- Guest user: Proceed button -->
     <div class="my-4">
         <form method="GET" action="{{ url_for('main.signin_login') }}">
+            <!-- Pass the current page as "next" -->
+            <input type="hidden" name="next" value="{{ request.path }}">
             <button type="submit" class="btn btn-primary w-100">
                 Proceed
             </button>
         </form>
     </div>
     {% endif %}
+
 
     <!-- Customer Details & Payment Form (shown for logged-in users) -->
     {% if session.get('logged_in') %}

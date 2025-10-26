@@ -17,9 +17,6 @@
 
             <p><strong>Description:</strong> {{ item['description'] }}</p>
 
-
-
-
             <!-- Booking form -->
             <form method="POST" action="{{ url_for('main.add_to_cart') }}">
                 <input type="hidden" name="package_id" value="{{ item['id'] }}">
@@ -28,20 +25,13 @@
 
                 <div class="mb-3">
                     <label for="hours" class="form-label">Number of Hours</label>
-                    <input type="number" class="form-control" name="hours" id="hours" value="1" min="1" max="24"
-                        required>
-
-
-
-
-
-
-
-
-
-
-
+                    <select class="form-select" name="hours" id="hours" required>
+                        {% for hour in dynamic_hours %}
+                        <option value="{{ hour }}">{{ hour }} hour{{ 's' if hour > 1 else '' }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+
 
                 <div class="mb-3">
                     <label for="photographer" class="form-label">Choose a Photographer</label>
