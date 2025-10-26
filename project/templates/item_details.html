@@ -25,7 +25,7 @@
 
                 <div class="mb-3">
                     <label for="hours" class="form-label">Number of Hours</label>
-                    <select class="form-select" name="hours" id="hours" required>
+                    <select class="form-select" name="hours" id="hours">
                         {% for hour in dynamic_hours %}
                         <option value="{{ hour }}">{{ hour }} hour{{ 's' if hour > 1 else '' }}</option>
                         {% endfor %}
@@ -35,7 +35,7 @@
 
                 <div class="mb-3">
                     <label for="photographer" class="form-label">Choose a Photographer</label>
-                    <select class="form-select" name="photographer" id="photographer" required>
+                    <select class="form-select" name="photographer" id="photographer">
                         <option value="">Select a photographer</option>
                         {% for photographer in photographers %}
                         <option value="{{ photographer.name }}">{{ photographer.name }}</option>
@@ -45,7 +45,7 @@
 
                 <div class="mb-3">
                     <label for="location" class="form-label">Location</label>
-                    <select class="form-select" name="location" id="location" required>
+                    <select class="form-select" name="location" id="location">
                         <option value="">Select a location</option>
                         {% for loc in locations %}
                         <option value="{{ loc }}">{{ loc }}</option>
@@ -55,8 +55,7 @@
 
                 <div class="mb-3">
                     <label for="appointmentTime" class="form-label">Select Appointment Date and Time</label>
-                    <input type="datetime-local" class="form-control" name="appointment_time" id="appointmentTime"
-                        required>
+                    <input type="datetime-local" class="form-control" name="appointment_time" id="appointmentTime">
                 </div>
 
                 <button type="submit" class="btn btn-danger flex-grow-1">Add to Booking</button>

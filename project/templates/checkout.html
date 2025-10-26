@@ -39,8 +39,10 @@
                         Location: {{ item.location if item.location is defined else item['location'] }}
                     </p>
                     <div class="mt-2 d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">${{ "%.2f"|format(item.price if 'price' in item else item.item_price)
-                            }}</span>
+                        <span class="fw-bold">
+                            {{ item.photographer if item.photographer is defined else item['photographer'] }}
+                        </span>
+
                         <div class="d-flex">
                             <form method="GET"
                                 action="{{ url_for('main.item_details', package_id=item.package_id if item.package else item.package_id) }}">

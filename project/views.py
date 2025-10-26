@@ -308,21 +308,21 @@ def login():
                 cart_id = cart['id']
 
             for item in guest_cart:
-                cur.execute("SELECT id FROM location WHERE name=%s LIMIT 1", (item['location'],))
+                cur.execute("SELECT id FROM location WHERE region=%s LIMIT 1", (item['location'],))
                 location_row = cur.fetchone()
                 location_id = location_row['id'] if location_row else None
 
                 cur.execute("""
-                    INSERT INTO cart_item (cart_id, package_id, price, hours, selected_datetime, location_id)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO cart_item (cart_id, package_id, price, selected_datetime, location_id)
+                    VALUES (%s, %s, %s, %s, %s)
                 """, (
                     cart_id,
                     item['package_id'],
                     item['price'],
-                    item['hours'],
-                    item['selected_datetime'],
+                    item.get('selected_datetime'),
                     location_id
                 ))
+
             mysql.connection.commit()
             session.pop('guest_cart', None)
     else:
