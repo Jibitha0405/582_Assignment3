@@ -306,7 +306,7 @@ def login():
 def logout():
     session.clear()
     flash("You have been logged out successfully.", "info")
-    return redirect(url_for('main.customer_dashboard'))
+    return redirect(url_for('main.signin_login'))
 
 @main.route('/signin_login.html')
 def signin_login():
