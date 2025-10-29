@@ -308,20 +308,29 @@ def login():
                 cart_id = cart['id']
 
             for item in guest_cart:
-                cur.execute("SELECT id FROM location WHERE region=%s LIMIT 1", (item['location'],))
-                location_row = cur.fetchone()
-                location_id = location_row['id'] if location_row else None
+                location_name = item.get('location')  # safely get location
+                photographer_name = item.get('photographer')
+
+                location_id = None
+                if location_name:
+                    cur.execute("SELECT id FROM location WHERE region=%s OR address_line=%s LIMIT 1", (location_name, location_name))
+                    location_row = cur.fetchone()
+                    location_id = location_row['id'] if location_row else None
+
 
                 cur.execute("""
-                    INSERT INTO cart_item (cart_id, package_id, price, selected_datetime, location_id)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO cart_item (cart_id, package_id, price, hours, selected_datetime, location_id, photographer_name)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
                     cart_id,
-                    item['package_id'],
-                    item['price'],
+                    item.get('package_id'),
+                    item.get('price'),
+                    item.get('hours', 1),
                     item.get('selected_datetime'),
-                    location_id
+                    location_id,
+                    photographer_name
                 ))
+
 
             mysql.connection.commit()
             session.pop('guest_cart', None)
@@ -353,30 +362,28 @@ def checkout():
             if cart_row:
                 cart_id = cart_row['id']
                 cur.execute("""
-                    SELECT ci.id AS cart_item_id,
-                           ci.price AS item_price,
-                           ci.selected_datetime,
-                           CONCAT(l.address_line, ', ', l.region, ' ', l.postcode) AS location_name,
-                           p.id AS package_id,
-                           p.package_image_url,
-                           p.description,
-                           p.price AS base_price,
-                           p.photography_duration,
-                           ph.id AS photographer_id,
-                           u.name AS photographer_name
-                    FROM cart_item ci
-                    JOIN cart c ON ci.cart_id = c.id
-                    JOIN package p ON ci.package_id = p.id
-                    JOIN photographer ph ON p.photographer_id = ph.id
-                    JOIN users u ON ph.user_id = u.id
-                    LEFT JOIN location l ON ci.location_id = l.id
-                    WHERE c.id = %s
-                """, (cart_id,))
-                items = cur.fetchall()
+                SELECT ci.id AS cart_item_id,
+                    ci.price AS item_price,
+                    ci.hours,
+                    ci.selected_datetime,
+                    ci.photographer_name,
+                    CONCAT(l.address_line, ', ', l.region, ' ', l.postcode) AS location_name,
+                    p.id AS package_id,
+                    p.package_image_url,
+                    p.description,
+                    p.price AS base_price
+                FROM cart_item ci
+                JOIN cart c ON ci.cart_id = c.id
+                JOIN package p ON ci.package_id = p.id
+                LEFT JOIN location l ON ci.location_id = l.id
+                WHERE c.customer_id = %s
+            """, (customer_id,))
+            items = cur.fetchall()
+
 
             # Assign a default duration for each item (1 hour)
-            for item in items:
-                item['hours'] = 1  # default, or derive from session if needed
+            # for item in items:
+            #     item['hours'] = 1  # default, or derive from session if needed
 
             # Calculate total
             total = sum(float(item['item_price']) * item['hours'] for item in items)
@@ -414,16 +421,30 @@ def checkout():
 
     return render_template('checkout.html', items=items, total=total)
 
+
 @main.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     item_name = request.form.get('item_name')
-    base_price = float(request.form.get('item_base_price', 0))
-    hours = float(request.form.get('hours', 1))
-    total_price = base_price * hours
     package_id = request.form.get('package_id')
-    selected_datetime = request.form.get('appointment_time')
-    photographer = request.form.get('photographer')
-    location = request.form.get('location')
+    base_price = request.form.get('item_base_price', 0)
+
+    # Optional fields
+    hours = request.form.get('hours')  # may be None if from gallery
+    photographer = request.form.get('photographer') or None
+    location = request.form.get('location') or None
+    selected_datetime = request.form.get('appointment_time') or None
+
+    # Convert to correct types / defaults
+    try:
+        base_price = float(base_price)
+    except ValueError:
+        base_price = 0.0
+    try:
+        hours = float(hours) if hours else 1
+    except ValueError:
+        hours = 1
+
+    total_price = base_price * hours
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute("SELECT package_image_url FROM package WHERE id = %s", (package_id,))
@@ -445,22 +466,36 @@ def add_to_cart():
         exists = cur.fetchone()['count']
 
         if not exists:
-            cur.execute("SELECT id FROM location WHERE address_line=%s LIMIT 1", (location,))
-            loc = cur.fetchone()
-            location_id = loc['id'] if loc else None
+            # Follow guest logic: take values directly from form
+            photographer_name = photographer or ""  # same as guest
+            location_name = location or ""          # same as guest
 
+            # Lookup location_id if selected
+            location_id = None
+            if location_name:
+                cur.execute(
+                    "SELECT id FROM location WHERE region=%s OR address_line=%s LIMIT 1",
+                    (location_name, location_name)
+                )
+                row = cur.fetchone()
+                location_id = row['id'] if row else None
+
+            # Insert into cart_item
             cur.execute("""
-                INSERT INTO cart_item (cart_id, package_id, price, hours, selected_datetime, location_id)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (cart_id, package_id, total_price, hours, selected_datetime, location_id))
+                INSERT INTO cart_item 
+                    (cart_id, package_id, price, hours, selected_datetime, location_id, photographer_name)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (cart_id, package_id, total_price, hours, selected_datetime, location_id, photographer_name))
             mysql.connection.commit()
         cur.close()
+
 
     else:
         # Guest cart
         if 'guest_cart' not in session:
             session['guest_cart'] = []
-        exists = any(i['package_id'] == package_id and i['selected_datetime'] == selected_datetime 
+
+        exists = any(i['package_id'] == package_id and i.get('selected_datetime') == selected_datetime
                      for i in session['guest_cart'])
         if not exists:
             session['guest_cart'].append({
@@ -468,7 +503,7 @@ def add_to_cart():
                 'name': item_name,
                 'price': total_price,
                 'hours': hours,
-                'duration': f"{hours} hour{'s' if hours > 1 else ''}",
+                'duration': f"{hours} hour{'s' if hours > 1 else ''}" if hours else "",
                 'photographer': photographer,
                 'location': location,
                 'selected_datetime': selected_datetime,
@@ -478,6 +513,7 @@ def add_to_cart():
 
     flash(f"{item_name} added to your booking! Total: ${total_price:.2f}", "success")
     return redirect(url_for('main.checkout'))
+
 
 
 @main.route('/clear_cart', methods=['POST'])
@@ -500,15 +536,47 @@ def clear_cart():
 
 @main.route('/remove_cart_item', methods=['POST'])
 def remove_cart_item():
-    index = int(request.form.get('item_index', -1))  # default to -1 if not sent
-    guest_cart = session.get('guest_cart', [])
+    index = int(request.form.get('item_index', -1))  # for guest
+    user_id = session.get('user_id')
 
-    if guest_cart and 0 <= index < len(guest_cart):
-        guest_cart.pop(index)
-        session.modified = True
-        flash("Item removed from cart!", "info")
+    if user_id:
+        # Signed-in user: remove from database
+        customer_id = get_customer_id(user_id)
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        # Get the cart_id
+        cur.execute("SELECT id FROM cart WHERE customer_id=%s", (customer_id,))
+        cart = cur.fetchone()
+        if not cart:
+            flash("No cart found.", "warning")
+            return redirect(url_for('main.checkout'))
+        cart_id = cart['id']
+
+        # Get the cart item ID by index
+        cur.execute("""
+            SELECT id FROM cart_item 
+            WHERE cart_id=%s ORDER BY id ASC
+        """, (cart_id,))
+        items = cur.fetchall()
+
+        if 0 <= index < len(items):
+            cart_item_id = items[index]['id']
+            cur.execute("DELETE FROM cart_item WHERE id=%s", (cart_item_id,))
+            mysql.connection.commit()
+            flash("Item removed from cart!", "info")
+        else:
+            flash("No item to remove.", "warning")
+        cur.close()
+
     else:
-        flash("No item to remove.", "warning")
+        # Guest user: remove from session
+        guest_cart = session.get('guest_cart', [])
+        if guest_cart and 0 <= index < len(guest_cart):
+            guest_cart.pop(index)
+            session.modified = True
+            flash("Item removed from cart!", "info")
+        else:
+            flash("No item to remove.", "warning")
 
     return redirect(url_for('main.checkout'))
 

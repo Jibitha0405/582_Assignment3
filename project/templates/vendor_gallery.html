@@ -20,6 +20,9 @@
                             <span>View Details</span>
                         </a>
                         <form action="{{ url_for('main.add_to_cart') }}" method="POST">
+                            <input type="hidden" name="package_id" value="{{ pkg.package_id }}">
+                            <input type="hidden" name="item_name" value="{{ pkg.title }}">
+                            <input type="hidden" name="item_base_price" value="{{ pkg.price }}">
                             <button type="submit" class="btn btn-success">
                                 Add to Cart
                             </button>
