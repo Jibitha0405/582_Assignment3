@@ -63,6 +63,24 @@ def admin_dashboard():
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
+     # ✅ Get total customers
+    cur.execute("SELECT COUNT(*) AS total_customers FROM users WHERE role = 'customer'")
+    total_customers = cur.fetchone()['total_customers']
+
+    # ✅ Get total photographers
+    cur.execute("SELECT COUNT(*) AS total_photographers FROM users WHERE role = 'photographer'")
+    total_photographers = cur.fetchone()['total_photographers']
+
+    # ✅ Get total bookings
+    cur.execute("SELECT COUNT(*) AS total_bookings FROM booking")
+    total_bookings = cur.fetchone()['total_bookings']
+
+    event_added = session.pop('event_added', None)
+    if session.pop('show_event_success', False):
+        flash("Event added successfully!", "success")
+
+    
+
     # Get all events
     cur.execute("SELECT * FROM event")
     events = cur.fetchall()
@@ -70,6 +88,8 @@ def admin_dashboard():
     # Total counts
     cur.execute("SELECT COUNT(*) AS total_bookings FROM booking")
     total_bookings = cur.fetchone()['total_bookings']
+
+    
 
     # ✅ Get 5 most recent bookings with joined details
     cur.execute("""
@@ -97,10 +117,11 @@ def admin_dashboard():
     return render_template(
         'admin_dashboard.html',
         events=events,
+        total_customers=total_customers,
+        total_photographers=total_photographers,
         total_bookings=total_bookings,
         recent_bookings=recent_bookings
     )
-
 
 # ---------------- Admin features ----------------
 
