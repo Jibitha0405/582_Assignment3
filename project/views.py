@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 import re
 import base64
+import MySQLdb
+
 
 main = Blueprint('main', __name__)
 
@@ -59,17 +61,46 @@ def admin_dashboard():
             session['event_added'] = True
             return redirect(url_for('main.admin_dashboard'))
 
-    cur = mysql.connection.cursor()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Get all events
     cur.execute("SELECT * FROM event")
     events = cur.fetchall()
+
+    # Total counts
+    cur.execute("SELECT COUNT(*) AS total_bookings FROM booking")
+    total_bookings = cur.fetchone()['total_bookings']
+
+    # ✅ Get 5 most recent bookings with joined details
+    cur.execute("""
+    SELECT 
+        b.id,
+        cu_user.name AS customer_name,
+        ph_user.name AS photographer_name,
+        e.name AS event_name,
+        DATE_FORMAT(b.booking_date, '%d %b %Y') AS booking_date,
+        b.status
+    FROM booking b
+    JOIN customer cu ON b.customer_id = cu.id
+    JOIN users cu_user ON cu.user_id = cu_user.id
+    JOIN photographer ph ON b.photographer_id = ph.id
+    JOIN users ph_user ON ph.user_id = ph_user.id
+    JOIN package pkg ON b.package_id = pkg.id
+    JOIN event e ON pkg.event_id = e.id
+    ORDER BY b.created_at DESC
+    LIMIT 5
+    """)
+    recent_bookings = cur.fetchall()
+
     cur.close()
 
-    event_added = session.pop('event_added', None)
-    if session.pop('show_event_success', False):
-        flash("Event added successfully!", "success")
+    return render_template(
+        'admin_dashboard.html',
+        events=events,
+        total_bookings=total_bookings,
+        recent_bookings=recent_bookings
+    )
 
-
-    return render_template('admin_dashboard.html', events=events)
 
 # ---------------- Admin features ----------------
 

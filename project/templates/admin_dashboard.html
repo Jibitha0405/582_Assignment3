@@ -16,9 +16,9 @@
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container-fluid d-flex flex-column flex-lg-row justify-content-lg-between align-items-center gap-3">
 
-            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.customer_dashboard') }}">
-                <img src="{{ url_for('static', filename='img/icon.png') }}" width="45" height="45" alt="">
-            </a>
+
+            <img src="{{ url_for('static', filename='img/icon.png') }}" width="45" height="45" alt="">
+
 
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end gap-3 w-100">
 
@@ -107,29 +107,20 @@
                                 <div class="stat-icon">
                                     <i class="bi bi-people"></i>
                                 </div>
-                                <h2 class="stat-number">15</h2>
+                                <h2 class="stat-number">{{ total_customers }}</h2>
                                 <p class="stat-label">Total Customers</p>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="bi bi-camera"></i>
-                                </div>
-                                <h2 class="stat-number">12</h2>
-                                <p class="stat-label">Photographers</p>
+                                <div class="stat-icon"><i class="bi bi-camera"></i></div>
+                                <h2 class="stat-number">{{ total_photographers }}</h2>
+                                <p class="stat-label">Total Photographers</p>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">
                                     <i class="bi bi-calendar-check"></i>
                                 </div>
-                                <h2 class="stat-number">5</h2>
+                                <h2 class="stat-number">{{ total_bookings }}</h2>
                                 <p class="stat-label">Total Bookings</p>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="bi bi-currency-dollar"></i>
-                                </div>
-                                <h2 class="stat-number">$13000</h2>
-                                <p class="stat-label">Monthly Revenue</p>
                             </div>
                         </div>
 
@@ -157,42 +148,36 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for booking in recent_bookings %}
                                                 <tr>
-                                                    <td>#0012</td>
-                                                    <td>John Smith</td>
-                                                    <td class="d-none d-sm-table-cell">Libuda Stephen</td>
-                                                    <td>Wedding</td>
-                                                    <td class="d-none d-md-table-cell">15 Nov</td>
-                                                    <td><span class="status-badge status-confirmed">Confirmed</span>
+                                                    <td>{{ '%d' | format(booking.id) }}</td>
+                                                    <td>{{ booking.customer_name }}</td>
+                                                    <td class="d-none d-sm-table-cell">{{ booking.photographer_name }}
                                                     </td>
+                                                    <td>{{ booking.event_name }}</td>
+                                                    <td class="d-none d-md-table-cell">{{ booking.booking_date }}</td>
                                                     <td>
-                                                        <button class="btn btn-primary btn-sm">View</button>
+                                                        {% if booking.status == 'Confirmed' %}
+                                                        <span class="status-badge status-confirmed">Confirmed</span>
+                                                        {% elif booking.status == 'Pending' %}
+                                                        <span class="status-badge status-pending">Pending</span>
+                                                        {% elif booking.status == 'Cancelled' %}
+                                                        <span class="status-badge status-cancelled">Cancelled</span>
+                                                        {% else %}
+                                                        <span class="status-badge">{{ booking.status }}</span>
+                                                        {% endif %}
                                                     </td>
+                                                    <td><button class="btn btn-primary btn-sm">View</button></td>
                                                 </tr>
+                                                {% endfor %}
+
+                                                {% if recent_bookings|length == 0 %}
                                                 <tr>
-                                                    <td>#0011</td>
-                                                    <td>Emma Wilson</td>
-                                                    <td class="d-none d-sm-table-cell">Mohamed Sadiq</td>
-                                                    <td>Portrait</td>
-                                                    <td class="d-none d-md-table-cell">14 Nov</td>
-                                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm">View</button>
-                                                    </td>
+                                                    <td colspan="7" class="text-center">No recent bookings found</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>#0010</td>
-                                                    <td>Robert Davis</td>
-                                                    <td class="d-none d-sm-table-cell">Sindre Luis</td>
-                                                    <td>Corporate</td>
-                                                    <td class="d-none d-md-table-cell">12 Nov</td>
-                                                    <td><span class="status-badge status-confirmed">Confirmed</span>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm">View</button>
-                                                    </td>
-                                                </tr>
+                                                {% endif %}
                                             </tbody>
+
                                         </table>
                                     </div>
                                 </div>
