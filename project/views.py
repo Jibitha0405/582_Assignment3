@@ -217,7 +217,7 @@ def signin():
         confirm_password = request.form.get('confirm_password')
         role = request.form.get('role_signup')
 
-        name_regex = r"^[A-Za-z]{2,50}$"
+        name_regex = r"^[A-Za-z]+(?: [A-Za-z]+)*$"
         if not re.match(name_regex, name):
             error_name = "Username must contain only letters and be 2–50 letters long."
 
