@@ -10,7 +10,7 @@
     <div id="studioCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <!-- Slide 1 -->
-            <div class="carousel-item active"
+            <div class="carousel-item active" <div class="carousel-item active"
                 style="background-image: url('{{ url_for('static', filename='img/birthdaycelebration.jpg') }}');">
                 <div class="carousel-content">
                     <h1 class="carousel-title">Capture Your Perfect Moments</h1>
@@ -58,22 +58,6 @@
 <div class="filterContainer container bg-white p-3 m-3 mx-auto rounded d-flex justify-content-center gap-3 ">
     <div class="d-flex flex-column flex-lg-row gap-3 align-items-center my-0">
         <h1 class="fs-2">Filter</h1>
-
-
-        <div class="dropdown ms-3">
-            <button
-                class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
-                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Location
-            </button>
-            <ul class="dropdown-menu border border-light-subtle" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">Brisbane</a></li>
-                <li><a class="dropdown-item" href="#">Sydney</a></li>
-                <li><a class="dropdown-item" href="#">Perth</a></li>
-            </ul>
-        </div>
-
-
         <!-- Event Filter -->
         <div class="dropdown ms-3">
             <button
@@ -91,50 +75,8 @@
                 {% endif %}
             </ul>
         </div>
-
-
-        <div class="dropdown ms-3">
-            <button
-                class="btn btn-secondary dropdown-toggle w-auto bg-transparent text-dark border border-light-subtle rounded px-5"
-                type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Price Range
-            </button>
-            <ul class="dropdown-menu p-3 border border-light-subtle" style="min-width: 250px;">
-                <li><a class="dropdown-item" href="#">$100 - $500</a></li>
-                <li><a class="dropdown-item" href="#">$501 - $1000</a></li>
-                <li><a class="dropdown-item" href="#">$1001 - $1500</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li>
-                    <p class="dropdown-header small text-muted">Custom Range</p>
-                    <div class="d-flex gap-2 mb-2">
-                        <input type="number" class="form-control form-control-sm" placeholder="Start $"
-                            aria-label="Start Price">
-                        <input type="number" class="form-control form-control-sm" placeholder="End $"
-                            aria-label="End Price">
-                    </div>
-                    <button class="btn btn-sm btn-primary w-100">Apply Filter</button>
-                </li>
-            </ul>
-        </div>
     </div>
 </div>
-<div class="container my-2">
-    <div class="d-flex flex-wrap gap-2">
-        <span class="badge bg-secondary rounded-pill px-3 py-2">
-            Sydney <span class="ms-2" style="cursor:pointer;">&times;</span>
-        </span>
-        <span class="badge bg-secondary rounded-pill px-3 py-2">
-            Wedding <span class="ms-2" style="cursor:pointer;">&times;</span>
-        </span>
-        <span class="badge bg-secondary rounded-pill px-3 py-2">
-            $501 - $1000 <span class="ms-2" style="cursor:pointer;">&times;</span>
-        </span>
-    </div>
-</div>
-
-
 
 <div class="container mt-4 h-100">
     <div class="row g-4">

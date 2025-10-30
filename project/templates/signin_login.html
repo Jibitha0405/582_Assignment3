@@ -86,6 +86,7 @@
         <!-- Login Form -->
         <div class="tab-pane fade" id="login" role="tabpanel">
           <form method="POST" action="{{ url_for('main.login') }}">
+            <input type="hidden" name="next_page" value="{{ next_page }}">
 
             <div class="mb-3">
               <input type="email" name="email" class="form-control" placeholder="Email address" required>

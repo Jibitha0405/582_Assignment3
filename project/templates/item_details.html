@@ -4,43 +4,83 @@
 {% block content %}
 <section class="container py-5">
     <div class="row g-5">
+        <!-- Image -->
         <div class="col-md-6">
             <img src="{{ url_for('static', filename='img/img2.jpg') }}" class="img-fluid rounded shadow"
                 alt="Beach Engagement Shoot">
         </div>
 
+        <!-- Details -->
         <div class="col-md-6">
-            <h2>Wedding Shoot</h2>
-            <p><strong>Photographer:</strong> John Doe</p>
-            <p><strong>Location:</strong> Perth, Western Australia</p>
-            <p><strong>Description:</strong> A full-day wedding shoot capturing every heartfelt moment from morning
-                preparations to the final dance. Includes 50+ professionally edited images, private online gallery,
-                and a printed album.</p>
-            <p><strong>Price:</strong> $1200</p>
+            <h2>{{ item['package_name'] }}</h2>
+            <p><strong>Price:</strong> ${{ total_price }}</p>
+            <p><strong>Description:</strong> {{ item['description'] }}</p>
 
-            <div class="mb-3">
-                <label for="appointmentTime" class="form-label">Select Appointment Date and Time:</label>
-                <input type="datetime-local" class="form-control" id="appointmentTime">
-            </div>
+            <!-- Booking form -->
+            <form method="POST" action="{{ url_for('main.add_to_cart') }}">
+                <input type="hidden" name="package_id" value="{{ item['id'] }}">
+                <input type="hidden" name="item_name" value="{{ item['package_name'] }}">
+                <input type="hidden" name="item_base_price" value="{{ item['price'] }}">
 
-            <div class="mb-3">
-                <label for="photographer" class="form-label">Choose a Photographer</label>
-                <select class="form-select" id="photographer" required>
-                    <option value="">Select a photographer</option>
-                    <option value="sarah">Italo melo</option>
-                    <option value="michael">Libuda Stephen</option>
-                    <option value="emma">Mohamed Sadiq</option>
-                    <option value="alex">Nano Erdozain</option>
-                    <option value="sarah">Rafan Barros</option>
-                    <option value="michael">Sindre Luis</option>
-                    <option value="emma">Stefan Stefancik</option>
-                    <option value="alex">Suliman Sallehi</option>
-                    <option value="alex">Amberssona Lawrence</option>
-                </select>
-                          
-            </div>
+                {% if cart_item %}
+                <input type="hidden" name="cart_item_id" value="{{ cart_item.id }}">
+                {% elif request.args.get('cart_item_id') %}
+                <input type="hidden" name="cart_item_id" value="{{ request.args.get('cart_item_id') }}">
+                {% endif %}
 
-            <a href="{{ url_for('main.checkout') }}" class="btn btn-danger">Add to Booking</a>
+                <!-- Hours -->
+                <div class="mb-3">
+                    <label for="hours" class="form-label">Number of Hours</label>
+                    <select class="form-select" name="hours" id="hours">
+                        {% for hour in dynamic_hours %}
+                        <option value="{{ hour }}" {% if cart_item and (cart_item.hours==hour or
+                            cart_item.hours|int==hour) %}selected{% endif %}>
+                            {{ hour }} hour{{ 's' if hour > 1 else '' }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Photographer -->
+                <div class="mb-3">
+                    <label for="photographer" class="form-label">Choose a Photographer</label>
+                    <select class="form-select" name="photographer" id="photographer">
+                        <option value="">Select a photographer</option>
+                        {% for photographer in photographers %}
+                        <option value="{{ photographer.name }}" {% if cart_item and
+                            (cart_item.photographer_name==photographer.name or
+                            cart_item.photographer==photographer.name) %}selected{% endif %}>
+                            {{ photographer.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Location -->
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <select class="form-select" name="location" id="location">
+                        <option value="">Select a location</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc }}" {% if cart_item and (cart_item.location_name==loc or
+                            cart_item.location==loc) %}selected{% endif %}>
+                            {{ loc }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Appointment -->
+                <div class="mb-3">
+                    <label for="appointmentTime" class="form-label">Select Appointment Date and Time</label>
+                    <input type="datetime-local" class="form-control" name="appointment_time" id="appointmentTime"
+                        value="{% if cart_item %}{{ cart_item.selected_datetime|replace(' ', 'T') }}{% endif %}">
+                </div>
+
+                <button type="submit" class="btn btn-danger flex-grow-1">
+                    {% if cart_item %}Update Booking{% else %}Add to Booking{% endif %}
+                </button>
+            </form>
         </div>
     </div>
 </section>

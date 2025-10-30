@@ -47,10 +47,6 @@
                             href="{{ url_for('main.vendor_gallery') }}">Gallery</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold {% if request.endpoint == 'item_details' %}active text-primary{% endif %}"
-                            href="{{ url_for('main.item_details') }}">Item Details</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link fw-semibold {% if request.endpoint == 'checkout' %}active text-primary{% endif %}"
                             href="{{ url_for('main.checkout') }}">Checkout</a>
                     </li>
@@ -73,38 +69,12 @@
                             <i class="bi bi-cart-fill"></i>
                             <span>Cart</span>
                         </a>
+                        {% if cart_count > 0 %}
                         <span
-                            class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">2</span>
-                    </div>
-
-                    <!-- Notifications -->
-                    <div class="nav-item dropdown">
-                        <a class="btn btn-light rounded-circle position-relative d-flex align-items-center justify-content-center"
-                            href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" style="width: 42px; height: 42px;">
-                            <i class="bi bi-bell fs-6"></i>
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm p-2"
-                            aria-labelledby="notificationDropdown" style="width: 320px; white-space: normal;">
-                            <li class="p-2 rounded bg-light mb-2">
-                                <div class="fw-bold text-success">Booking Accepted ✅</div>
-                                <div>Your Wedding Shoot booking for 4 May 2025 has been accepted.</div>
-                                <div class="small text-muted mt-1">2 hrs ago</div>
-                                <div class="text-end mt-2">
-                                    <button class="btn btn-sm btn-outline-secondary">OK</button>
-                                </div>
-                            </li>
-                            <li class="p-2 rounded bg-light">
-                                <div class="fw-bold text-danger">Booking Declined ❌</div>
-                                <div>Your Save The Date booking for 17 April 2025 has been rejected.</div>
-                                <div class="small text-muted mt-1">1 day ago</div>
-                                <div class="text-end mt-2">
-                                    <button class="btn btn-sm btn-outline-secondary">OK</button>
-                                </div>
-                            </li>
-                        </ul>
+                            class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
                     </div>
 
                     <div class="nav-item dropdown">
