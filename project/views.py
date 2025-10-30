@@ -158,19 +158,39 @@ def vendor_management():
 @main.route('/admin_dashboard')
 def admin_dashboard():
     return render_template('admin_dashboard.html')
-
+    
 @main.route('/item_details')
 def item_details():
     package_id = request.args.get('package_id', 1)
+    cart_item_id = request.args.get('cart_item_id')
+    edit_index = request.args.get('edit_index')  # for guest cart
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT * FROM package WHERE id = %s", (package_id,))
+    cur.execute("SELECT * FROM package WHERE id=%s", (package_id,))
     item = cur.fetchone()
-    cur.close()
-
     if not item:
         flash("Package not found", "danger")
+        cur.close()
         return redirect(url_for('main.index'))
+
+    cart_item = None
+
+    # Logged-in user
+    if cart_item_id:
+        cur.execute("SELECT * FROM cart_item WHERE id=%s", (cart_item_id,))
+        cart_item = cur.fetchone()
+
+    cur.close()
+
+    # Guest user
+    if not cart_item and edit_index is not None:
+        guest_cart = session.get('guest_cart', [])
+        try:
+            edit_index = int(edit_index)
+            cart_item = guest_cart[edit_index]
+        except (IndexError, ValueError):
+            flash("Invalid item to edit", "warning")
+            return redirect(url_for('main.checkout'))
 
     photographers_list = [
         {"name": "Italo Melo"}, {"name": "Libuda Stephen"}, {"name": "Mohamed Sadiq"},
@@ -178,17 +198,17 @@ def item_details():
         {"name": "Stefan Stefancik"}, {"name": "Suliman Sallehi"}, {"name": "Amberssona Lawrence"}
     ]
     locations_list = ["Perth", "Sydney", "Brisbane"]
-
-    # Add dynamic hours (1–12, can adjust as needed)
     dynamic_hours = list(range(1, 13))
 
     return render_template(
         'item_details.html',
         item=item,
+        cart_item=cart_item,
         photographers=photographers_list,
         locations=locations_list,
         dynamic_hours=dynamic_hours
     )
+
 
 
 @main.route('/error')
@@ -347,7 +367,6 @@ def login():
         return redirect(url_for('main.photographer_dashboard'))
     else:
         return redirect(url_for('main.customer_dashboard'))
-
 @main.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     user_id = session.get('user_id')
@@ -362,47 +381,57 @@ def checkout():
             if cart_row:
                 cart_id = cart_row['id']
                 cur.execute("""
-                SELECT ci.id AS cart_item_id,
-                    ci.price AS item_price,
-                    ci.hours,
-                    ci.selected_datetime,
-                    ci.photographer_name,
-                    CONCAT(l.address_line, ', ', l.region, ' ', l.postcode) AS location_name,
-                    p.id AS package_id,
-                    p.package_image_url,
-                    p.description,
-                    p.price AS base_price
-                FROM cart_item ci
-                JOIN cart c ON ci.cart_id = c.id
-                JOIN package p ON ci.package_id = p.id
-                LEFT JOIN location l ON ci.location_id = l.id
-                WHERE c.customer_id = %s
-            """, (customer_id,))
-            items = cur.fetchall()
+                    SELECT ci.id AS cart_item_id,
+                           ci.price AS item_price,
+                           ci.hours,
+                           ci.selected_datetime,
+                           ci.photographer_name AS photographer,
+                           COALESCE(CONCAT(l.address_line, ', ', l.region, ' ', l.postcode), '') AS location,
+                           p.id AS package_id,
+                           p.package_image_url,
+                           p.description
+                    FROM cart_item ci
+                    JOIN cart c ON ci.cart_id = c.id
+                    JOIN package p ON ci.package_id = p.id
+                    LEFT JOIN location l ON ci.location_id = l.id
+                    WHERE c.customer_id = %s
+                """, (customer_id,))
+                fetched_items = cur.fetchall()
+                
+                # Convert dicts to objects
+                class CartItemObj:
+                    def __init__(self, d):
+                        self.id = d['cart_item_id']
+                        self.price = d['item_price']
+                        self.hours = d['hours']
+                        self.photographer = d['photographer']
+                        self.location = d['location']
+                        self.package_id = d['package_id']
+                        self.package_image_url = d['package_image_url']
+                        self.description = d['description']
+                        self.selected_datetime = d['selected_datetime']
+                
+                items = [CartItemObj(item) for item in fetched_items]
 
-
-            # Assign a default duration for each item (1 hour)
-            # for item in items:
-            #     item['hours'] = 1  # default, or derive from session if needed
-
-            # Calculate total
-            total = sum(float(item['item_price']) * item['hours'] for item in items)
             cur.close()
+        total = sum(item.price * item.hours for item in items)
+
     else:
+        # Guest cart
         guest_cart = session.get('guest_cart', [])
         class CartItem:
             def __init__(self, d):
                 self.package_id = d.get('package_id')
                 self.name = d.get('name')
                 self.price = d.get('price')
-                self.hours = d.get('hours', 1)  # default to 1 if missing
+                self.hours = d.get('hours', 1)
                 self.duration = d.get('duration')
                 self.photographer = d.get('photographer')
                 self.location = d.get('location')
                 self.selected_datetime = d.get('selected_datetime')
                 self.package_image_url = d.get('package_image_url')
         items = [CartItem(item) for item in guest_cart]
-        total = sum(float(item.price) * item.hours for item in items)
+        total = sum(item.price * item.hours for item in items)
 
     if request.method == 'POST':
         flash("Payment processed successfully!", "success")
@@ -457,37 +486,42 @@ def add_to_cart():
         customer_id = get_customer_id(user_id)
         cart_id = get_cart_id(customer_id)
 
+        cart_item_id = request.form.get('cart_item_id')  # coming from item_details edit form
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # Prevent duplicate package for same datetime
-        cur.execute("""
-            SELECT COUNT(*) AS count FROM cart_item 
-            WHERE cart_id=%s AND package_id=%s AND selected_datetime=%s
-        """, (cart_id, package_id, selected_datetime))
-        exists = cur.fetchone()['count']
 
-        if not exists:
-            # Follow guest logic: take values directly from form
-            photographer_name = photographer or ""  # same as guest
-            location_name = location or ""          # same as guest
+        photographer_name = photographer or ""
+        location_name = location or ""
 
-            # Lookup location_id if selected
-            location_id = None
-            if location_name:
-                cur.execute(
-                    "SELECT id FROM location WHERE region=%s OR address_line=%s LIMIT 1",
-                    (location_name, location_name)
-                )
-                row = cur.fetchone()
-                location_id = row['id'] if row else None
+        # Lookup location_id if selected
+        location_id = None
+        if location_name:
+            cur.execute(
+                "SELECT id FROM location WHERE region=%s OR address_line=%s LIMIT 1",
+                (location_name, location_name)
+            )
+            row = cur.fetchone()
+            location_id = row['id'] if row else None
 
-            # Insert into cart_item
+        if cart_item_id:
+            # UPDATE existing item
+            cur.execute("""
+                UPDATE cart_item
+                SET price=%s, hours=%s, selected_datetime=%s, location_id=%s, photographer_name=%s
+                WHERE id=%s
+            """, (total_price, hours, selected_datetime, location_id, photographer_name, cart_item_id))
+            flash("Item updated successfully!", "success")
+        else:
+            # INSERT new item
             cur.execute("""
                 INSERT INTO cart_item 
                     (cart_id, package_id, price, hours, selected_datetime, location_id, photographer_name)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (cart_id, package_id, total_price, hours, selected_datetime, location_id, photographer_name))
-            mysql.connection.commit()
+            flash(f"{item_name} added to your booking! Total: ${total_price:.2f}", "success")
+
+        mysql.connection.commit()
         cur.close()
+
 
 
     else:
