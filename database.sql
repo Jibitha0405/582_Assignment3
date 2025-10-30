@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `ifn582_a3_database` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `ifn582_a3_database`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: ifn582_a3_database
@@ -493,7 +491,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin User','admin@example.com','e86f78a8a3caf0b60d8e74e5942aa6d86dc150cd3c03338aef25b7d2d7e3acc7','admin','2025-10-30 18:15:30'),(2,'Alice Johnson','alice@example.com','hash1','customer','2025-10-30 18:15:30'),(3,'Bob Smith','bob@example.com','hash2','customer','2025-10-30 18:15:30'),(4,'Charlie Lens','charlie@example.com','hash3','photographer','2025-10-30 18:15:30'),(5,'Diana Frames','diana@example.com','hash4','photographer','2025-10-30 18:15:30'),(6,'Ethan Click','ethan@example.com','hash5','photographer','2025-10-30 18:15:30'),(7,'Jibitha','jibitha01@gmail.com','b85d1d7b85d1720187a8e61267a12d31e0b5dba790d3e72b3bbaced0e8bff69b','customer','2025-10-30 18:16:28'),(8,'Jibitha','jibitha02@gmail.com','b85d1d7b85d1720187a8e61267a12d31e0b5dba790d3e72b3bbaced0e8bff69b','customer','2025-10-30 18:19:06');
+INSERT INTO `users` VALUES (1,'Admin User','admin@gmail.com','e86f78a8a3caf0b60d8e74e5942aa6d86dc150cd3c03338aef25b7d2d7e3acc7','admin','2025-10-30 18:15:30'),(2,'Alice Johnson','alice@example.com','hash1','customer','2025-10-30 18:15:30'),(3,'Bob Smith','bob@example.com','hash2','customer','2025-10-30 18:15:30'),(4,'Charlie Lens','charlie@example.com','hash3','photographer','2025-10-30 18:15:30'),(5,'Diana Frames','diana@example.com','hash4','photographer','2025-10-30 18:15:30'),(6,'Ethan Click','ethan@example.com','hash5','photographer','2025-10-30 18:15:30'),(7,'Jibitha','jibitha01@gmail.com','b85d1d7b85d1720187a8e61267a12d31e0b5dba790d3e72b3bbaced0e8bff69b','customer','2025-10-30 18:16:28'),(8,'Jibitha','jibitha02@gmail.com','b85d1d7b85d1720187a8e61267a12d31e0b5dba790d3e72b3bbaced0e8bff69b','customer','2025-10-30 18:19:06');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -506,4 +504,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-30 18:52:03
+-- Dump completed on 2025-10-30 23:12:29
