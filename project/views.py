@@ -231,11 +231,7 @@ def delete_event(event_id):
 
     return redirect(url_for('main.admin_dashboard'))
 
-# @main.route('/admin_dashboard')
-# def admin_dashboard():
-#     return render_template('admin_dashboard.html')
-
-# ---------------- Customer features ----------------
+# Customer features
 @main.route('/customer_profile')
 def customer_profile():
     return render_template('customer_profile.html')
@@ -317,7 +313,7 @@ def item_details():
     )
 
 
-# ---------------- Photographer features ----------------
+#Photographer features
 @main.route('/add_service', methods=['POST'])
 def add_service():
     photographer_id = session.get('photographer_id')
@@ -358,36 +354,7 @@ def admin_event_requests():
     cur.close()
     return render_template('admin_event_requests.html', requests=requests)
 
-# @main.route('/request_event', methods=['GET', 'POST'])
-# def request_event():
-#     photographer_id = session.get('photographer_id')
-
-#     if request.method == 'POST':
-#         event_name = request.form.get('event_name')
-
-#         if not event_name:
-#             flash("Please enter an event name.", "warning")
-#             return redirect(url_for('main.request_event'))
-
-#         cur = mysql.connection.cursor()
-#         try:
-#             cur.execute("""
-#                 INSERT INTO event_request (photographer_id, event_name, status)
-#                 VALUES (%s, %s, 'Pending')
-#             """, (photographer_id, event_name))
-#             mysql.connection.commit()
-#             flash("Your event request has been sent to admin.", "info")
-#         except Exception as e:
-#             mysql.connection.rollback()
-#             flash(f"Error submitting request: {e}", "danger")
-#         finally:
-#             cur.close()
-
-#         return redirect(url_for('main.photographer_dashboard'))
-
-#     return render_template('request_event.html')
-
-# ---------------- ROUTES ----------------
+#ROUTES
 
 @main.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -480,7 +447,7 @@ def login():
         flash("Login successful!", "success")
         print("User role is:", user_id, user_name, user_role)
 
-        # ------------------- Merge guest cart -------------------
+        #Merge guest cart
         guest_cart = session.get('guest_cart', [])
         if guest_cart:
             # Get or create customer
