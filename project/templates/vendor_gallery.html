@@ -14,7 +14,6 @@
                     <p class="card-text">{{ pkg.display_price }}</p>
                     <p class="card-text"><i class="bi bi-person-circle"></i> {{ pkg.photographer_name }}</p>
                     <div class="d-flex justify-content-center gap-2 flex-wrap">
-                        <!-- Go to item details page -->
                         <a class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center"
                             href="{{ url_for('main.item_details', package_id=pkg.package_id) }}">
                             <span>View Details</span>

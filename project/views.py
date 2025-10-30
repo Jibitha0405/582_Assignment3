@@ -7,7 +7,6 @@ import MySQLdb.cursors
 # Create a Blueprint instance
 main = Blueprint('main', __name__)
 
-
 @main.app_context_processor
 def cart_count_processor():
     """
@@ -37,9 +36,7 @@ def cart_count_processor():
     else:
         # Guest cart stored in session
         count = len(session.get('guest_cart', []))
-
     return dict(cart_count=count)
-
 
 def get_customer_id(user_id):
     """Return the customer_id for a logged-in user, or create one if missing."""
@@ -70,7 +67,6 @@ def get_cart_id(customer_id):
     cur.close()
     return cart_id
 
-
 @main.route('/', endpoint='customer_dashboard')
 def customer_dashboard():
     cur = mysql.connection.cursor()
@@ -85,7 +81,6 @@ def customer_dashboard():
 
     return render_template('customer_dashboard.html', db_name=db_name)
 
-
 @main.route('/photographer_dashboard')
 def photographer_dashboard():
     cur = mysql.connection.cursor()
@@ -97,12 +92,9 @@ def photographer_dashboard():
         db_name = db_name_row['DATABASE()']
     else:
         db_name = "Unknown"
-
     return render_template('photographer_dashboard.html', db_name=db_name)
 
-
 #ROUTES
-
 @main.route('/index')
 def index():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -127,7 +119,6 @@ def index():
     events = ['Wedding', 'Engagement', 'Baptism', 'Birthday']
     price_ranges = ['$100 - $500', '$501 - $1000', '$1001 - $1500']
     active_filters = ['Sydney', 'Wedding', '$501 - $1000'] 
-
     return render_template(
         'index.html',
         photographers=photographers,
@@ -137,16 +128,13 @@ def index():
         active_filters=active_filters
     )
 
-
 @main.route('/admin')
 def admin():
     return render_template('admin.html')
 
-
 @main.route('/customer_profile')
 def customer_profile():
     return render_template('customer_profile.html')
-
 
 @main.route('/logout')
 def logout():
@@ -154,11 +142,9 @@ def logout():
     flash("You have been logged out successfully.", "info")
     return redirect(url_for('main.customer_dashboard'))
 
-
 @main.route('/index_old')
 def index_old():
     return render_template('index_old.html')
-
 
 @main.route('/vendor_gallery')
 def vendor_gallery():
@@ -179,14 +165,11 @@ def vendor_gallery():
     """)
     packages = cur.fetchall()
     cur.close()
-
     return render_template('vendor_gallery.html', packages=packages)
-
 
 @main.route('/vendor_management')
 def vendor_management():
     return render_template('vendor_management.html')
-
 
 @main.route('/admin_dashboard')
 def admin_dashboard():
@@ -205,9 +188,7 @@ def item_details():
         flash("Package not found", "danger")
         cur.close()
         return redirect(url_for('main.index'))
-
     cart_item = None
-
     # Logged-in user
     if cart_item_id:
         cur.execute("SELECT * FROM cart_item WHERE id=%s", (cart_item_id,))
@@ -224,7 +205,6 @@ def item_details():
         except (IndexError, ValueError):
             flash("Invalid item to edit", "warning")
             return redirect(url_for('main.checkout'))
-
     photographers_list = [
         {"name": "Italo Melo"}, {"name": "Libuda Stephen"}, {"name": "Mohamed Sadiq"},
         {"name": "Nano Erdozain"}, {"name": "Rafan Barros"}, {"name": "Sindre Luis"},
@@ -241,13 +221,6 @@ def item_details():
         locations=locations_list,
         dynamic_hours=dynamic_hours
     )
-
-
-
-@main.route('/error')
-def error():
-    return render_template('error.html')
-
 
 # Signin/Login Page
 @main.route('/signin_login.html')
@@ -581,8 +554,6 @@ def add_to_cart():
     flash(f"{item_name} added to your booking! Total: ${total_price:.2f}", "success")
     return redirect(url_for('main.checkout'))
 
-
-
 @main.route('/clear_cart', methods=['POST'])
 def clear_cart():
     user_id = session.get('user_id')
@@ -647,11 +618,11 @@ def remove_cart_item():
 
     return redirect(url_for('main.checkout'))
 
-
-
-
-
 #ERROR HANDLERS
+@main.route('/error')
+def error():
+    return render_template('error.html')
+
 @main.app_errorhandler(404)
 def page_not_found(e):
     return render_template('error.html', error_message="Page Not Found"), 404
