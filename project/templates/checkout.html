@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container py-5">
-    <h2 class="mb-4 text-center">Checkout</h2>
+    <h2 class="mb-4 text-center">Cart</h2>
 
     <!-- Cart Items & Order Summary -->
     <div class="card shadow-sm mb-4">
@@ -84,17 +84,37 @@
 
     {% if not session.get('logged_in') %}
     <div class="my-4">
-        <form method="GET" action="{{ url_for('main.signin_login') }}">
-            <!-- Pass the current page as "next" -->
-            <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" class="btn btn-primary w-100">
-                Proceed
-            </button>
-        </form>
+        <!-- Trigger Modal Button -->
+        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#loginAlertModal">
+            Proceed
+        </button>
+
+        <!-- Login Alert Modal -->
+        <div class="modal fade" id="loginAlertModal" tabindex="-1" aria-labelledby="loginAlertModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginAlertModalLabel">Login Required</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        You need to log in first to proceed to checkout.
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Redirect to login page -->
+                        <a href="{{ url_for('main.signin_login', next=request.path) }}"
+                            class="btn btn-primary">Login</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     {% endif %}
 
-
+    <h2 class="mb-4 text-center">Checkout</h2>
     <!-- Customer Details & Payment Form (shown for logged-in users) -->
     {% if session.get('logged_in') %}
     <div class="card shadow-sm mt-4">

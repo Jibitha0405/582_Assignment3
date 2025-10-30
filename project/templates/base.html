@@ -73,9 +73,14 @@
                             <i class="bi bi-cart-fill"></i>
                             <span>Cart</span>
                         </a>
+                        {% if cart_count > 0 %}
                         <span
-                            class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">2</span>
+                            class="cart-badge position-absolute translate-middle badge rounded-pill bg-light text-dark">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
                     </div>
+
 
                     <!-- Notifications -->
                     <div class="nav-item dropdown">

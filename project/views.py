@@ -8,6 +8,39 @@ import MySQLdb.cursors
 main = Blueprint('main', __name__)
 
 
+@main.app_context_processor
+def cart_count_processor():
+    """
+    Returns cart_count for the navbar for both logged-in users and guests.
+    """
+    count = 0
+
+    if session.get('logged_in'):
+        user_id = session.get('user_id')
+        if user_id:
+            # Get customer_id
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT id FROM customer WHERE user_id=%s", (user_id,))
+            customer_row = cur.fetchone()
+            if customer_row:
+                customer_id = customer_row['id']
+                # Count cart items
+                cur.execute("""
+                    SELECT COUNT(*) AS cnt FROM cart_item ci
+                    JOIN cart c ON ci.cart_id = c.id
+                    WHERE c.customer_id = %s
+                """, (customer_id,))
+                row = cur.fetchone()
+                if row:
+                    count = row['cnt']
+            cur.close()
+    else:
+        # Guest cart stored in session
+        count = len(session.get('guest_cart', []))
+
+    return dict(cart_count=count)
+
+
 def get_customer_id(user_id):
     """Return the customer_id for a logged-in user, or create one if missing."""
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -68,7 +101,7 @@ def photographer_dashboard():
     return render_template('photographer_dashboard.html', db_name=db_name)
 
 
-# ---------------- ROUTES ----------------
+#ROUTES
 
 @main.route('/index')
 def index():
@@ -93,7 +126,7 @@ def index():
     locations = ['Brisbane', 'Sydney', 'Perth']
     events = ['Wedding', 'Engagement', 'Baptism', 'Birthday']
     price_ranges = ['$100 - $500', '$501 - $1000', '$1001 - $1500']
-    active_filters = ['Sydney', 'Wedding', '$501 - $1000']  # example, can be dynamic later
+    active_filters = ['Sydney', 'Wedding', '$501 - $1000'] 
 
     return render_template(
         'index.html',
@@ -163,7 +196,7 @@ def admin_dashboard():
 def item_details():
     package_id = request.args.get('package_id', 1)
     cart_item_id = request.args.get('cart_item_id')
-    edit_index = request.args.get('edit_index')  # for guest cart
+    edit_index = request.args.get('edit_index')
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute("SELECT * FROM package WHERE id=%s", (package_id,))
@@ -222,7 +255,7 @@ def signin_login():
     return render_template('signin_login.html', hide_nav=True)
 
 
-# ---------------- SIGN UP ----------------
+#SIGN UP
 @main.route('/signin', methods=['GET', 'POST'])
 def signin():
     error_email = None
@@ -279,7 +312,7 @@ def signin():
     )
 
 
-# ---------------- LOGIN ----------------
+#LOGIN
 @main.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
@@ -306,7 +339,7 @@ def login():
 
         flash("Login successful!", "success")
 
-        # ---------------- MERGE GUEST CART ----------------
+        #MERGE GUEST CART
         guest_cart = session.get('guest_cart', [])
         if guest_cart:
             cur.execute("SELECT id FROM customer WHERE user_id=%s", (user_id,))
@@ -618,7 +651,7 @@ def remove_cart_item():
 
 
 
-# ---------------- ERROR HANDLERS ----------------
+#ERROR HANDLERS
 @main.app_errorhandler(404)
 def page_not_found(e):
     return render_template('error.html', error_message="Page Not Found"), 404
